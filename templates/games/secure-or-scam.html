@@ -1,0 +1,54 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Secure or Scam — HackShield</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="{% static 'games/secure-or-scam.css' %}">
+</head>
+
+<body>
+
+  {% include "components/floating_back_btn.html" %}
+
+  <div class="wrap">
+
+    <header class="head">
+      <h1>🔎 Secure or Scam?</h1>
+      <p class="lead">Analyze the domain & clues — choose wisely.</p>
+    </header>
+
+    <main class="card">
+
+      <div class="meta">
+        <div>Round <span id="round">0</span>/<span id="total">8</span></div>
+        <div>Score: <span id="score">0</span></div>
+      </div>
+
+      <div id="site-card" class="site-card animate-in">
+        <div id="domain" class="domain">example.com</div>
+        <div id="clues" class="clues"></div>
+      </div>
+
+      <div class="actions">
+        <button id="btn-safe" class="btn safe">✅ Safe</button>
+        <button id="btn-scam" class="btn scam">⚠️ Scam</button>
+      </div>
+
+      <div id="explain" class="explain hidden"></div>
+
+      <form id="score-form" method="post" style="display:none">
+        {% csrf_token %}
+        <input type="hidden" name="score" id="score-input" value="0">
+      </form>
+
+    </main>
+
+    <footer class="foot">HackShield — Spot scams, stay safe.</footer>
+
+  </div>
+
+  <script src="{% static 'games/secure-or-scam.js' %}"></script>
+</body>
+</html>

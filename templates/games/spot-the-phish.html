@@ -1,0 +1,70 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Spot the Phish — HackShield</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="{% static 'games/spot-the-phish.css' %}">
+</head>
+<body>
+  {% include "components/floating_back_btn.html" %}
+
+  <div class="page">
+    <header class="header">
+      <div class="header-inner">
+        <h1>⚡ Spot the Phish</h1>
+        <p class="lead">Real vs Phish — pick quickly, get instant explainable feedback and learn what to watch for.</p>
+      </div>
+
+      <div class="statusbar">
+        <div class="stat"><span id="round">0</span>/<span id="total">10</span> rounds</div>
+        <div class="stat">Score: <strong id="score">0</strong></div>
+        <div class="stat">Time: <span id="timer">--</span></div>
+      </div>
+    </header>
+
+    <main class="card" role="application" aria-labelledby="game-title">
+      <div id="panel" class="panel">
+        <article id="email-card" class="email-card" aria-live="polite">
+          <header class="email-meta">
+            <div class="from"><strong>From:</strong> <span id="email-from"></span></div>
+            <div class="subject" id="email-subject"></div>
+            <div class="tags" id="email-tags" aria-hidden="true"></div>
+          </header>
+
+          <section class="email-body-wrap">
+            <pre class="email-body" id="email-body" aria-label="Email body"></pre>
+          </section>
+
+          <footer class="email-links" id="email-links" aria-hidden="true"></footer>
+        </article>
+      </div>
+
+      <div class="controls" role="group" aria-label="Answer controls">
+        <button id="btn-real" class="btn btn-real" title="Real (R key)">Real (R)</button>
+        <button id="btn-phish" class="btn btn-phish" title="Phish (P key)">Phish (P)</button>
+      </div>
+
+      <div id="feedback" class="feedback" aria-live="assertive"></div>
+
+      <div class="meta-row">
+        <div class="tip">Tip: inspect sender domain, link destinations, tone and urgency, and attachments.</div>
+        <div class="progress">
+          <div class="progress-bar"><div id="progress-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <!-- hidden fallback form (kept) -->
+      <form id="score-form" method="post" style="display:none">
+        {% csrf_token %}
+        <input type="hidden" name="score" id="score-input" value="0">
+      </form>
+    </main>
+
+    <footer class="footer">HackShield — Learn. Play. Defend.</footer>
+  </div>
+
+  <script src="{% static 'games/spot-the-phish.js' %}"></script>
+</body>
+</html>

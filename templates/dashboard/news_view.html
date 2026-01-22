@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div style="max-width:850px; margin:auto; padding:25px; position:relative;">
+
+    <!-- BACK BUTTON -->
+    {% include "components/floating_back_btn.html" %}
+
+    <!-- TITLE -->
+    <h1 style="
+        font-size:2rem;
+        font-weight:700;
+        margin-top:40px;
+        color:#9b72ff;
+        text-shadow:0 0 12px #9b72ff88;
+        line-height:1.4;
+        word-break:break-word;
+    ">
+        {{ item.title }}
+    </h1>
+
+    <!-- DATE -->
+    {% if item.date %}
+    <p style="
+        color:#a0a0a0;
+        margin-bottom:20px;
+        font-size:0.88rem;
+    ">
+        📅 {{ item.date }}
+    </p>
+    {% endif %}
+
+    <!-- CONTENT CARD -->
+    <div style="
+        background:#0f0f16;
+        border:1px solid #3a2f66;
+        border-radius:12px;
+        padding:22px;
+        line-height:1.65;
+        color:#dcdcdc;
+        font-size:0.95rem;
+        overflow-wrap:break-word;
+        white-space:pre-line;
+    ">
+        {% if item.content %}
+            {{ item.content|safe }}
+        {% else %}
+            <p style="color:#888;">No article content available offline.</p>
+        {% endif %}
+    </div>
+
+    <!-- ORIGINAL LINK -->
+    {% if item.link and item.link != "#" %}
+        <div style="margin-top:25px; text-align:left;">
+            <a href="{{ item.link }}" target="_blank" style="
+                display:inline-block;
+                background:#6c5ce7;
+                padding:10px 18px;
+                border-radius:6px;
+                color:white;
+                text-decoration:none;
+                font-size:0.85rem;
+                box-shadow:0 0 10px #6c5ce777;
+                transition:0.25s;
+            ">
+                🔗 Open Original Article
+            </a>
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% include 'includes/header.html' %}
+
+<main class="history-container">
+
+    <!-- HEADER -->
+    <section class="history-header fade-in">
+        <h1 class="history-title">🧩 Challenge History</h1>
+        <p class="history-sub">
+            Track your progress across all cybersecurity challenges.
+        </p>
+    </section>
+
+    {% if attempts %}
+    <div class="history-table-wrapper glass-box fade-in">
+
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Challenge</th>
+                    <th>Difficulty</th>
+                    <th>XP</th>
+                    <th>Attempts</th>
+                    <th>Time Spent</th>
+                    <th>Status</th>
+                    <th>Solved At</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for attempt in attempts %}
+                <tr>
+
+                    <!-- Challenge -->
+                    <td class="title-cell">
+                        <a href="{% url 'challenge_detail' attempt.challenge.slug %}" class="title-link">
+                            {{ attempt.challenge.title }}
+                        </a>
+                    </td>
+
+                    <!-- Difficulty -->
+                    <td>{{ attempt.challenge.difficulty }}</td>
+
+                    <!-- XP -->
+                    <td class="center">+{{ attempt.challenge.xp_reward }}</td>
+
+                    <!-- Attempts -->
+                    <td class="center">{{ attempt.attempts|default:0 }}</td>
+
+                    <!-- Time Spent (FIXED) -->
+                    <td class="center">
+                        {% if attempt.time_spent %}
+                            {{ attempt.time_spent }}
+                        {% else %}
+                            --
+                        {% endif %}
+                    </td>
+
+                    <!-- Status -->
+                    <td class="center">
+                        {% if attempt.solved %}
+                            <span class="status solved">✅ Solved</span>
+                        {% else %}
+                            <span class="status unsolved">❌ Unsolved</span>
+                        {% endif %}
+                    </td>
+
+                    <!-- Solved At -->
+                    <td class="center solved-time">
+                        {% if attempt.solved_at %}
+                            {{ attempt.solved_at|date:"M d, Y H:i" }}
+                        {% else %}
+                            --
+                        {% endif %}
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    {% else %}
+        <p class="no-attempts fade-in">
+            No challenges attempted yet. Go conquer some!
+        </p>
+    {% endif %}
+
+    <div class="back-wrapper">
+        <a href="{% url 'challenge_list' %}" class="back-btn">
+            🔙 Back to Challenges
+        </a>
+    </div>
+
+</main>
+
+{% include 'includes/footer.html' %}
+
+<style>
+/* PAGE LAYOUT */
+.history-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* HEADER */
+.history-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+.history-title {
+    font-size: 44px;
+    font-weight: 800;
+    color: #00ff99;
+    margin-bottom: 8px;
+}
+.history-sub {
+    color: #8debbd;
+    opacity: 0.7;
+    font-size: 14px;
+}
+
+/* TABLE CONTAINER */
+.glass-box {
+    background: rgba(15, 15, 15, 0.9);
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 230, 118, 0.15);
+    backdrop-filter: blur(10px);
+    overflow-x: auto;
+}
+
+/* TABLE */
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+.history-table thead tr {
+    border-bottom: 1px solid rgba(0, 230, 118, 0.25);
+}
+.history-table th {
+    padding: 12px 14px;
+    color: #00e676;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+.history-table td {
+    padding: 12px 14px;
+    color: #a8f5cd;
+    border-bottom: 1px solid rgba(0, 230, 118, 0.12);
+    white-space: nowrap;
+}
+.history-table tr:hover {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+/* Challenge title */
+.title-cell {
+    font-weight: 600;
+}
+.title-link {
+    color: #00ff99;
+    text-decoration: none;
+}
+.title-link:hover {
+    text-decoration: underline;
+}
+
+/* Center columns */
+.center {
+    text-align: center;
+}
+
+/* Status badges */
+.status {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+.solved {
+    background: rgba(0, 230, 118, 0.2);
+    color: #00ff99;
+}
+.unsolved {
+    background: rgba(255, 70, 70, 0.25);
+    color: #ff8b8b;
+}
+
+/* Solved time */
+.solved-time {
+    color: #8debbd;
+    opacity: 0.8;
+}
+
+/* NO ATTEMPTS */
+.no-attempts {
+    text-align: center;
+    color: #8debbd;
+    opacity: 0.6;
+    padding: 60px 0;
+}
+
+/* BACK BUTTON */
+.back-wrapper {
+    text-align: center;
+    margin-top: 30px;
+}
+.back-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    background: rgba(0, 230, 118, 0.15);
+    color: #00ff99;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: 0.25s;
+}
+.back-btn:hover {
+    background: rgba(0, 230, 118, 0.3);
+}
+
+/* ANIMATION */
+.fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+{% endblock %}

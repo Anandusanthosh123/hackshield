@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div style="
+    padding:60px 20px;
+    max-width:900px;
+    margin:auto;
+    min-height:100vh;
+">
+
+    <!-- TITLE -->
+    <h1 style="
+        text-align:center;
+        font-size:2.4rem;
+        font-weight:800;
+        margin-bottom:35px;
+        background:linear-gradient(90deg,#9b72ff,#6c5ce7);
+        -webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;
+    ">
+        Global Leaderboard
+    </h1>
+
+    <!-- LEADERBOARD LIST -->
+    {% for user in top_users %}
+    <div style="
+        background:rgba(20,26,41,0.75);
+        border:1px solid var(--border-color);
+        padding:18px 22px;
+        border-radius:var(--radius);
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        margin-bottom:18px;
+        backdrop-filter:blur(10px);
+        transition:0.25s;
+    "
+    onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 0 20px rgba(108,92,231,0.25)'"
+    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+
+        <!-- LEFT SIDE -->
+        <div style="display:flex; align-items:center; gap:18px;">
+
+            <!-- RANK NUMBER -->
+            <div style="
+                font-size:1.6rem;
+                font-weight:700;
+                color:#ffd369;
+                width:40px;
+                text-align:center;
+            ">
+                #{{ forloop.counter }}
+            </div>
+
+            <!-- AVATAR CIRCLE -->
+            <div style="
+                width:52px;
+                height:52px;
+                border-radius:50%;
+                background:linear-gradient(135deg,#6c5ce7,#a683ff);
+                display:flex;
+                justify-content:center;
+                align-items:center;
+                font-size:1.3rem;
+                font-weight:700;
+                color:white;
+            ">
+                {{ user.username.0|upper }}
+            </div>
+
+            <!-- NAME & LEVEL -->
+            <div>
+                <p style="font-size:1.2rem; font-weight:600; color:white;">
+                    @{{ user.username }}
+                </p>
+                <p style="font-size:0.85rem; color:var(--text-soft);">
+                    Level {{ user.level }} • {{ user.xp }} XP
+                </p>
+            </div>
+
+        </div>
+
+        <!-- RIGHT SIDE (CYBER SCORE) -->
+        <div style="text-align:right;">
+            <p style="
+                font-size:1.6rem;
+                font-weight:700;
+                background:linear-gradient(90deg,#a084ff,#6c5ce7);
+                -webkit-background-clip:text;
+                -webkit-text-fill-color:transparent;
+            ">
+                {{ user.cyber_score|floatformat:1 }}
+            </p>
+            <p style="font-size:0.7rem; color:var(--text-soft);">Cyber Score</p>
+        </div>
+
+    </div>
+    {% empty %}
+
+    <!-- NO USERS -->
+    <p style="text-align:center; color:var(--text-soft); margin-top:30px;">
+        No players yet. Be the first!
+    </p>
+
+    {% endfor %}
+
+    <!-- BACK BUTTON -->
+    <div style="text-align:center; margin-top:40px;">
+        <a href="{% url 'dashboard' %}" style="
+            padding:12px 32px;
+            background:linear-gradient(90deg,#8d79ff,#6c5ce7);
+            color:white;
+            text-decoration:none;
+            border-radius:var(--radius);
+            font-weight:600;
+            transition:0.25s;
+            display:inline-block;
+        "
+        onmouseover="this.style.boxShadow='0 0 20px rgba(108,92,231,0.35)'"
+        onmouseout="this.style.boxShadow='none'">
+            Back to Dashboard
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

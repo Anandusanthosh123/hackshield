@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)http://127.0.0.1:8000/certificate/2/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HackShield</title>
+<link rel="icon" type="image/png" href="http://127.0.0.1:8000/static/images/favicon.png">
+
+
+<style>
+/* -------------------------------
+   GLOBAL THEME (Professional Cyber)
+----------------------------------*/
+
+:root {
+  --bg-dark: #0b0f17;
+  --bg-panel: #111622;
+  --card-bg: #141a29;
+  --accent: #6c5ce7;
+  --accent-light: #a29bfe;
+  --text-main: #e6e9f0;
+  --text-soft: #b5bed1;
+  --border-color: #232b3d;
+  --radius: 14px;
+  --transition: 0.25s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-dark);
+  font-family: 'Inter', sans-serif;
+  color: var(--text-main);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* WRAPPER */
+.wrapper {
+  width: 100%;
+  max-width: 1150px;
+  margin: auto;
+  padding: 40px 20px;
+}
+
+/* HEADINGS */
+h1, h2, h3 {
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+h1 {
+  font-size: 2.8rem;
+  background: linear-gradient(90deg, #9b72ff, #5c5cff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-top: 1.8rem;
+  margin-bottom: .8rem;
+  color: var(--accent-light);
+}
+
+h3 {
+  font-size: 1.3rem;
+  margin-bottom: .4rem;
+}
+
+/* BUTTONS */
+.btn {
+  display: inline-block;
+  padding: 12px 22px;
+  border-radius: var(--radius);
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #6c5ce7, #5a49d1);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #7f71ff, #6c5ce7);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  border: 2px solid var(--accent);
+  color: var(--accent);
+}
+
+.btn-outline:hover {
+  background: var(--accent);
+  color: white;
+}
+
+/* CARDS */
+.card {
+  background: var(--card-bg);
+  padding: 22px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent-light);
+}
+
+.card-desc {
+  color: var(--text-soft);
+  margin-top: 6px;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  gap: 24px;
+  margin-top: 30px;
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+}
+
+/* FORMS */
+.form-card {
+  background: var(--card-bg);
+  padding: 30px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  max-width: 600px;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+}
+
+input, textarea, select {
+  width: 100%;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  border-radius: var(--radius);
+  color: white;
+  margin-bottom: 18px;
+  transition: var(--transition);
+}
+
+input:focus {
+  border-color: var(--accent-light);
+  box-shadow: 0 0 0 3px rgba(108,92,231,0.25);
+}
+
+/* MESSAGES */
+.message-box {
+  background: var(--bg-panel);
+  padding: 14px 16px;
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  margin-bottom: 14px;
+  color: var(--text-soft);
+}
+
+/* FOOTER */
+footer {
+  margin-top: 60px;
+  text-align: center;
+  color: var(--text-soft);
+  padding: 20px 0;
+  border-top: 1px solid var(--border-color);
+}
+
+/* CUSTOM SCROLLBAR */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #2d3348;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+.nav-link {
+  color: var(--text-soft);
+  font-weight: 500;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.nav-link:hover {
+  color: var(--accent-light);
+}
+
+
+
+
+
+/* Floating Back Button (HackShield Purple/Cyan) */
+#back-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 9999;
+
+  display: inline-block;
+  padding: 10px 18px;
+
+  background: linear-gradient(135deg, #8d79ff, #6ce7e0);
+  color: #ffffff;
+  font-weight: 600;
+  border-radius: 10px;
+  text-decoration: none;
+
+  box-shadow: 0 4px 15px rgba(109, 92, 231, 0.4);
+  backdrop-filter: blur(6px);
+  transition: all 0.25s ease;
+}
+
+/* Hover style */
+#back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(109, 92, 231, 0.55);
+}
+
+/* Pressed */
+#back-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(109, 92, 231, 0.35);
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  #back-btn {
+    padding: 8px 14px;
+    font-size: 14px;
+    top: 14px;
+    left: 14px;
+  }
+}
+
+.hs-logo {
+    display: block;
+    margin: 0 auto 20px; /* top 0, center, bottom gap */
+    width: 180px;       /* adjust size */
+    
+    filter: drop-shadow(0 0 12px #8a4dff);
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hs-logo:hover {
+    transform: scale(1.12);
+    filter: drop-shadow(0 0 22px #7f32ff);
+}
+
+
+
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- Django Messages -->
+  
+
+  
+
+<div class="cert-overlay" id="certOverlay">
+  <div class="cert-modal">
+
+    <button class="close-btn" onclick="closeCert()">✕</button>
+
+    <!-- Certificate Preview -->
+    <div class="certificate">
+      <h1>Certificate of Completion</h1>
+      <p>This is proudly presented to</p>
+      <h2>drago</h2>
+      <p>for successfully completing</p>
+      <h3>Introduction to Ethical Hacking</h3>
+
+      <span class="issued">
+        Issued on Jan 04, 2026
+      </span>
+    </div>
+
+    <!-- Actions -->
+    <div class="cert-actions">
+      
+      <button class="btn" onclick="shareCert()">🔗 Share</button>
+      <a href="http://127.0.0.1:8000/profile/@drago/" class="btn primary">
+        ➕ Add to Profile
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function closeCert() {
+  document.getElementById('certOverlay').classList.add('fade-out');
+  setTimeout(() => {
+    window.location.href = "/profile/@drago/";
+  }, 400);
+}
+
+function shareCert() {
+  navigator.share({
+    title: "My HackShield Certificate",
+    url: window.location.href
+  });
+}
+</script>
+
+<style>
+.cert-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.cert-modal {
+  background: radial-gradient(circle,#15102b,#0b0618);
+  padding: 30px;
+  border-radius: 20px;
+  width: 720px;
+  animation: pop .4s ease;
+  position: relative;
+}
+
+@keyframes pop {
+  from { transform: scale(.8); opacity: 0 }
+  to   { transform: scale(1); opacity: 1 }
+}
+
+.fade-out {
+  animation: fadeOut .4s forwards;
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; transform: scale(.9); }
+}
+
+.close-btn {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  color: #aaa;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.certificate {
+  border: 2px solid #8d79ff;
+  border-radius: 14px;
+  padding: 26px;
+  text-align: center;
+}
+
+.certificate h1 { color: #bba7ff; }
+.certificate h2 { color: white; font-size: 30px; }
+.certificate h3 { color: #8d79ff; }
+
+.issued {
+  display: block;
+  margin-top: 12px;
+  color: #aaa;
+}
+
+.cert-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.btn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: #1f2937;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: linear-gradient(135deg,#8d79ff,#6c5ce7);
+}
+</style>
+
+
+
+</div>
+
+<footer>
+  © 2025 HackShield — Professional Cybersecurity Training
+</footer>
+
+
+
+</body></html>

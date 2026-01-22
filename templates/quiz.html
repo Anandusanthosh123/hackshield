@@ -1,0 +1,158 @@
+<!-- templates/quiz.html -->
+{% extends 'base.html' %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center p-4">
+  <div class="card p-8 rounded-2xl w-full max-w-3xl space-y-6">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center">
+      <h2 class="text-2xl font-bold text-cyan-400">Question <span id="q-num">1</span>/10</h2>
+      <div class="text-3xl font-mono text-red-400" id="timer">30</div>
+    </div>
+
+    <!-- Progress -->
+    <div class="w-full bg-gray-800 rounded-full h-3 overflow-hidden">
+      <div id="progress" class="bg-gradient-to-r from-cyan-500 to-purple-600 h-full transition-all duration-300"
+           style="width:10%"></div>
+    </div>
+
+    <!-- Question -->
+    <p class="text-xl font-medium text-white" id="question-text"></p>
+
+    <!-- Options -->
+    <div id="options" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+
+    <!-- Feedback -->
+    <div id="feedback" class="hidden p-4 rounded-lg text-center font-medium"></div>
+
+    <!-- Controls -->
+    <div class="flex justify-between items-center mt-6">
+      <button id="hint-btn"
+              class="btn-glow px-5 py-2 rounded-full bg-purple-600 text-white disabled:opacity-50"
+              disabled>
+        Hint (10 coins)
+      </button>
+      <button id="next-btn"
+              class="btn-glow px-7 py-2 rounded-full bg-emerald-600 text-white hidden">
+        Next Question
+      </button>
+    </div>
+
+    <!-- Live Stats -->
+    <div class="text-center text-gray-300">
+      Streak: <span id="streak" class="font-bold text-yellow-400">0</span> |
+      Coins: <span id="coins" class="font-bold text-emerald-400">{{ user.cyber_coins }}</span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let questions = [], current = 0, xp = 0, streak = 0, coins = {{ user.cyber_coins }};
+  let timer, timeLeft = 30;
+
+  fetch('{% url "quiz_api" %}')
+    .then(r => r.json())
+    .then(data => { questions = data; loadQuestion(); })
+    .catch(() => alert('Failed to load questions'));
+
+  function loadQuestion() {
+    if (current >= questions.length) { endQuiz(); return; }
+
+    const q = questions[current];
+    document.getElementById('q-num').textContent = current + 1;
+    document.getElementById('question-text').textContent = q.text;
+    document.getElementById('progress').style.width = `${((current+1)/10)*100}%`;
+
+    const opts = document.getElementById('options');
+    opts.innerHTML = '';
+    ['A','B','C','D'].forEach(l => {
+      const btn = document.createElement('button');
+      btn.className = 'p-4 rounded-xl bg-gray-800 text-left text-white hover:bg-gray-700 transition';
+      btn.textContent = `${l}. ${q['option_'+l.toLowerCase()]}`;
+      btn.onclick = () => selectAnswer(l, btn);
+      opts.appendChild(btn);
+    });
+
+    document.getElementById('hint-btn').disabled = coins < 10;
+    startTimer();
+  }
+
+  function startTimer() {
+    timeLeft = 30;
+    document.getElementById('timer').textContent = timeLeft;
+    clearInterval(timer);
+    timer = setInterval(() => {
+      timeLeft--;
+      document.getElementById('timer').textContent = timeLeft;
+      if (timeLeft <= 0) { clearInterval(timer); selectAnswer(null); }
+    }, 1000);
+  }
+
+  function selectAnswer(answer, btn) {
+    clearInterval(timer);
+    const q = questions[current];
+    const correct = q.correct_answer;
+    const isCorrect = answer === correct;
+
+    document.querySelectorAll('#options button').forEach(b => b.disabled = true);
+
+    if (isCorrect) {
+      btn.classList.add('bg-emerald-600');
+      xp += q.xp_reward;
+      streak++;
+      coins += q.coin_reward;
+      showFeedback(`Correct! +${q.xp_reward} XP`, 'bg-emerald-600');
+    } else {
+      if (btn) btn.classList.add('bg-red-600');
+      const correctBtn = document.querySelector(`#options button:nth-child(${['A','B','C','D'].indexOf(correct)+1})`);
+      if (correctBtn) correctBtn.classList.add('bg-emerald-600');
+      streak = 0;
+      showFeedback(`Wrong. Answer: ${correct}. ${q.explanation}`, 'bg-red-600');
+    }
+
+    updateStats();
+    document.getElementById('next-btn').classList.remove('hidden');
+  }
+
+  function showFeedback(msg, bg) {
+    const fb = document.getElementById('feedback');
+    fb.textContent = msg;
+    fb.className = `p-4 rounded-lg text-center font-medium ${bg} text-white block`;
+  }
+
+  function updateStats() {
+    document.getElementById('streak').textContent = streak;
+    document.getElementById('coins').textContent = coins;
+  }
+
+  document.getElementById('next-btn').onclick = () => {
+    current++;
+    document.getElementById('feedback').classList.add('hidden');
+    document.getElementById('next-btn').classList.add('hidden');
+    loadQuestion();
+  };
+
+  document.getElementById('hint-btn').onclick = () => {
+    if (coins < 10) return;
+    coins -= 10;
+    updateStats();
+    const q = questions[current];
+    const hintWord = q['option_' + q.correct_answer.toLowerCase()].split(' ')[0];
+    showFeedback(`Hint: look for "${hintWord}..."`, 'bg-purple-600');
+    this.disabled = true;
+  };
+
+  function endQuiz() {
+    fetch('{% url "quiz_complete" %}', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'X-CSRFToken': '{{ csrf_token }}'},
+      body: JSON.stringify({xp, streak, coins})
+    })
+    .then(() => {
+      alert(`Quiz Complete! You earned ${xp} XP!`);
+      window.location.href = '{% url "dashboard" %}';
+    });
+  }
+</script>
+{% endblock %}

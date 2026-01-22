@@ -1,0 +1,360 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+/* ===============================
+   ROOT & RESET
+================================ */
+:root {
+  --primary: #8b5cf6;
+  --secondary: #22c55e;
+  --danger: #ef4444;
+  --bg: #0b0618;
+  --card: #120f1c;
+  --border: #2d2745;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ===============================
+   QUIZ LAYOUT
+================================ */
+.quiz-wrapper {
+  max-width: 920px;
+  margin: 40px auto;
+  padding: 36px;
+  background: linear-gradient(145deg,#0f0b1d,#07030f);
+  border-radius: 22px;
+  color: var(--text);
+  box-shadow: 0 40px 80px rgba(0,0,0,.6);
+  animation: fadeUp .6s ease;
+}
+
+@keyframes fadeUp {
+  from {opacity:0; transform:translateY(16px)}
+  to {opacity:1; transform:translateY(0)}
+}
+
+/* ===============================
+   HEADER
+================================ */
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 26px;
+}
+
+.quiz-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: #c7b9ff;
+}
+
+.quiz-meta {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.attempts {
+  background: rgba(139,92,246,.15);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* ===============================
+   PROGRESS BAR
+================================ */
+.progress-wrap {
+  margin: 18px 0 30px;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #1f2937;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg,var(--primary),#6366f1);
+  transition: width .4s ease;
+}
+
+/* ===============================
+   QUESTIONS
+================================ */
+.question-card {
+  display: none;
+  animation: slideIn .45s cubic-bezier(.4,0,.2,1);
+}
+
+.question-card.active {
+  display: block;
+}
+
+@keyframes slideIn {
+  from {opacity:0; transform:translateX(30px)}
+  to {opacity:1; transform:translateX(0)}
+}
+
+.question-text {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 22px;
+  line-height: 1.6;
+}
+
+/* ===============================
+   OPTIONS
+================================ */
+.options {
+  display: grid;
+  gap: 14px;
+}
+
+.option {
+  position: relative;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: rgba(31,41,55,.7);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all .25s ease;
+  overflow: hidden;
+}
+
+.option::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center,
+    rgba(139,92,246,.25), transparent 60%);
+  opacity: 0;
+  transition: .4s;
+}
+
+.option:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  box-shadow: 0 0 24px rgba(139,92,246,.35);
+}
+
+.option:hover::after {
+  opacity: 1;
+}
+
+.option input {
+  display: none;
+}
+
+.option.selected {
+  background: rgba(34,197,94,.15);
+  border-color: var(--secondary);
+  box-shadow: 0 0 26px rgba(34,197,94,.45);
+}
+
+/* ===============================
+   NAVIGATION
+================================ */
+.quiz-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 36px;
+}
+
+button {
+  padding: 12px 26px;
+  border-radius: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  border: none;
+  transition: all .25s ease;
+}
+
+button.primary {
+  background: linear-gradient(135deg,var(--primary),#6366f1);
+  color: #05020d;
+}
+
+button.secondary {
+  background: rgba(148,163,184,.15);
+  color: var(--text);
+}
+
+button:hover {
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ===============================
+   SUBMIT
+================================ */
+.submit-box {
+  margin-top: 30px;
+  text-align: center;
+  display: none;
+}
+
+.submit-box.active {
+  display: block;
+}
+
+.submit-box button {
+  background: linear-gradient(135deg,#22c55e,#16a34a);
+  color: #05210f;
+  padding: 14px 36px;
+  font-size: 16px;
+  box-shadow: 0 0 30px rgba(34,197,94,.6);
+}
+</style>
+
+<div class="quiz-wrapper">
+
+  <div class="quiz-header">
+    <div>
+      <div class="quiz-title">{{ course.title }} — Final Quiz</div>
+      <div class="quiz-meta">10 questions • Pass mark: 7/10</div>
+    </div>
+    <div class="attempts">
+      Attempts left: {{ attempts_left }}
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <form method="post" id="quizForm">
+    {% csrf_token %}
+
+    {% for q in questions %}
+    <div class="question-card {% if forloop.first %}active{% endif %}"
+         data-index="{{ forloop.counter0 }}">
+      <div class="question-text">
+        Q{{ forloop.counter }}. {{ q.question }}
+      </div>
+
+      <div class="options">
+        {% for opt in q.options.all %}
+        <label class="option">
+          <input type="radio"
+                 name="q_{{ q.id }}"
+                 value="{{ opt.id }}">
+          {{ opt.text }}
+        </label>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="quiz-nav">
+      <button type="button" class="secondary" id="prevBtn" disabled>
+        ← Back
+      </button>
+      <button type="button" class="primary" id="nextBtn">
+        Next →
+      </button>
+    </div>
+
+    <div class="submit-box" id="submitBox">
+      <button type="submit">
+        🚀 Submit Quiz
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+/* ===============================
+   QUIZ LOGIC
+================================ */
+const cards = document.querySelectorAll(".question-card");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+const submitBox = document.getElementById("submitBox");
+const progressFill = document.getElementById("progressFill");
+
+let current = 0;
+
+/* OPTION SELECTION */
+document.querySelectorAll(".option").forEach(opt => {
+  opt.addEventListener("click", () => {
+    const parent = opt.closest(".options");
+    parent.querySelectorAll(".option")
+      .forEach(o => o.classList.remove("selected"));
+    opt.classList.add("selected");
+    opt.querySelector("input").checked = true;
+  });
+});
+
+/* UPDATE VIEW */
+function updateView() {
+  cards.forEach(c => c.classList.remove("active"));
+  cards[current].classList.add("active");
+
+  prevBtn.disabled = current === 0;
+
+  const percent = ((current + 1) / cards.length) * 100;
+  progressFill.style.width = percent + "%";
+
+  if (current === cards.length - 1) {
+    nextBtn.style.display = "none";
+    submitBox.classList.add("active");
+  } else {
+    nextBtn.style.display = "inline-block";
+    submitBox.classList.remove("active");
+  }
+}
+
+/* NAVIGATION */
+prevBtn.onclick = () => {
+  if (current > 0) {
+    current--;
+    updateView();
+  }
+};
+
+nextBtn.onclick = () => {
+  if (current < cards.length - 1) {
+    current++;
+    updateView();
+  }
+};
+
+/* PREVENT EMPTY SUBMIT */
+document.getElementById("quizForm")
+  .addEventListener("submit", (e) => {
+    for (let i = 0; i < cards.length; i++) {
+      if (!cards[i].querySelector("input:checked")) {
+        alert("⚠ Please answer all questions.");
+        current = i;
+        updateView();
+        e.preventDefault();
+        return;
+      }
+    }
+  });
+
+updateView();
+</script>
+
+{% endblock %}

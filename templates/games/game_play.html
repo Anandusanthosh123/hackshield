@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% include 'includes/header.html' %}
+
+<main class="game-container">
+
+  <h1 class="game-title">{{ game.name }}</h1>
+  <p class="game-description">{{ game.description }}</p>
+
+  <div class="glass-card game-box">
+    {% if game.slug == 'phish-spot' %}
+      <p class="game-highlight">🕵️ Identify phishing emails to earn XP!</p>
+      <p class="game-note">Game logic coming soon…</p>
+
+    {% elif game.slug == 'pw-typer' %}
+      <p class="game-highlight">⌨️ Type strong passwords quickly to train your reflexes!</p>
+      <p class="game-note">Game logic coming soon…</p>
+
+    {% else %}
+      <p class="game-note">Game under development 🧩</p>
+    {% endif %}
+  </div>
+
+  <div class="back-link">
+    <a href="{% url 'dashboard' %}">← Back to Dashboard</a>
+  </div>
+
+</main>
+
+{% include 'includes/footer.html' %}
+
+<style>
+  /* --- Layout --- */
+  .game-container {
+    max-width: 700px;
+    margin: 60px auto;
+    padding: 24px;
+    background: #050505;
+    border-radius: 18px;
+  }
+
+  /* --- Title --- */
+  .game-title {
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    color: #00ff99;
+  }
+
+  /* --- Description --- */
+  .game-description {
+    font-size: 15px;
+    color: rgba(141, 235, 189, 0.7);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  /* --- Glass Box --- */
+  .glass-card {
+    background: rgba(10, 15, 10, 0.9);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 230, 118, 0.12);
+    border-radius: 14px;
+    padding: 24px;
+  }
+
+  .game-box {
+    margin-top: 10px;
+  }
+
+  /* --- Game text --- */
+  .game-highlight {
+    color: #00ff99;
+    font-size: 16px;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .game-note {
+    color: rgba(141, 235, 189, 0.6);
+    font-size: 14px;
+    margin-top: 4px;
+  }
+
+  /* --- Back link --- */
+  .back-link {
+    margin-top: 24px;
+  }
+
+  .back-link a {
+    color: #00e676;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.25s;
+  }
+
+  .back-link a:hover {
+    text-decoration: underline;
+    color: #00ff99;
+  }
+</style>
+
+{% endblock %}

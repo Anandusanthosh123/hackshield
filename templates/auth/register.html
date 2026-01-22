@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div style="
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px 20px;
+    background:
+        radial-gradient(circle at top, rgba(60,40,120,0.15) 0%, transparent 40%),
+        linear-gradient(180deg, #05060b 0%, #020309 100%);
+">
+
+
+  <!-- Register Card -->
+  <div style="
+      width:100%;
+      max-width:420px;
+      background:rgba(20, 26, 41, 0.8);
+      border:1px solid var(--border-color);
+      border-radius:var(--radius);
+      padding:40px 32px;
+      backdrop-filter:blur(12px);
+      box-shadow:0 0 25px rgba(108,92,231,0.15);
+  ">
+
+      <!-- Title -->
+      <h1 style="
+        text-align:center;
+        font-size:2rem;
+        font-weight:800;
+        background:linear-gradient(90deg,#9b72ff,#6c5ce7);
+        -webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;
+        margin-bottom:10px;
+      ">
+        Create Account
+      </h1>
+
+      <p style="text-align:center; color:var(--text-soft); margin-bottom:30px;">
+        Join HackShield and begin your cybersecurity journey.
+      </p>
+
+      <form method="POST" id="registerForm" novalidate>
+      {% csrf_token %}
+
+      <!-- Username -->
+      <label>Username</label>
+      <input type="text" id="username" name="username" required autocomplete="username">
+      <div id="userFeedback" class="feedback"></div>
+
+      <!-- Email -->
+      <label>Email</label>
+      <input type="email" id="email" name="email" required autocomplete="email">
+      <div id="emailFeedback" class="feedback"></div>
+
+      <!-- Password -->
+      <label>Password</label>
+      <div style="position:relative;">
+        <input type="password" id="password1" name="password1" required autocomplete="new-password">
+        <button type="button" id="togglePass1" class="eye-btn">
+          <svg id="eyeIcon1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+               stroke-width="2" stroke="currentColor" width="20" height="20" style="color:var(--accent-light);">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 
+                2.943 9.542 7-1.274 4.057-5.064 7-9.542 7S3.732 
+                16.057 2.458 12z"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Strength bar -->
+      <div style="
+          height:6px;
+          background:#1f2533;
+          margin-top:8px;
+          border-radius:6px;
+          overflow:hidden;
+      ">
+        <div id="strengthBar" style="
+            height:100%;
+            width:0;
+            transition:0.3s;
+        "></div>
+      </div>
+
+      <div id="pass1Feedback" class="feedback"></div>
+
+      <!-- Confirm Password -->
+      <label>Confirm Password</label>
+      <div style="position:relative;">
+        <input type="password" id="password2" name="password2" required autocomplete="new-password">
+        <button type="button" id="togglePass2" class="eye-btn">
+          <svg id="eyeIcon2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+               stroke-width="2" stroke="currentColor" width="20" height="20" style="color:var(--accent-light);">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 
+                8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 
+                7S3.732 16.057 2.458 12z"/>
+          </svg>
+        </button>
+      </div>
+
+      <div id="pass2Feedback" class="feedback"></div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn btn-primary" style="width:100%; margin-top:10px;">
+        Register
+      </button>
+
+      <p style="text-align:center; margin-top:18px; color:var(--text-soft);">
+        Already have an account?
+        <a href="{% url 'login' %}" style="color:var(--accent-light); text-decoration:none;">
+          Login here
+        </a>
+      </p>
+
+      </form>
+  </div>
+</div>
+
+<!-- Extra CSS for form fields + eye button -->
+<style>
+  label {
+    color: var(--text-soft);
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    display: block;
+    font-weight: 600;
+  }
+
+  input {
+    width: 100%;
+    padding: 12px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    background: var(--bg-panel);
+    color: var(--text-main);
+    margin-bottom: 6px;
+    transition: var(--transition);
+  }
+
+  input:focus {
+    border-color: var(--accent-light);
+    box-shadow: 0 0 0 2px rgba(108,92,231,0.25);
+    outline: none;
+  }
+
+  .feedback {
+    min-height:18px;
+    font-size:0.8rem;
+    margin-bottom:12px;
+  }
+
+  .eye-btn {
+    position:absolute;
+    right:10px;
+    top:8px;
+    background:none;
+    border:none;
+    cursor:pointer;
+    padding:4px;
+  }
+</style>
+
+<!-- JS (same logic, color values updated to match new palette) -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+  const username = document.getElementById('username');
+  const email    = document.getElementById('email');
+  const pass1    = document.getElementById('password1');
+  const pass2    = document.getElementById('password2');
+
+  const userFb  = document.getElementById('userFeedback');
+  const emailFb = document.getElementById('emailFeedback');
+  const pass1Fb = document.getElementById('pass1Feedback');
+  const pass2Fb = document.getElementById('pass2Feedback');
+
+  const strengthBar = document.getElementById('strengthBar');
+
+  /* Username */
+  const usernameRegex = /^[a-zA-Z0-9._-]{3,20}$/;
+  username.addEventListener('input', () => {
+    const ok = usernameRegex.test(username.value);
+    userFb.textContent = ok ? "Looks good" : "3–20 characters only";
+    userFb.style.color = ok ? "#6c5ce7" : "#ff4d4d";
+  });
+
+  /* Email */
+  const emailRegex = /^[^@]+@[^@]+\.[^@]+$/;
+  email.addEventListener('input', () => {
+    const ok = emailRegex.test(email.value);
+    emailFb.textContent = ok ? "Valid email" : "Invalid email";
+    emailFb.style.color = ok ? "#6c5ce7" : "#ff4d4d";
+  });
+
+  /* Password Strength Meter */
+  pass1.addEventListener('input', () => {
+    const v = pass1.value;
+    const checks = [
+      /[A-Z]/.test(v),
+      /[a-z]/.test(v),
+      /\d/.test(v),
+      /[^A-Za-z0-9]/.test(v),
+      v.length >= 8
+    ];
+    const strength = checks.filter(Boolean).length;
+
+    strengthBar.style.width = (strength * 20) + "%";
+
+    let msg = "";
+    let color = "";
+
+    if (strength <= 2) { msg = "Weak"; color = "#ff4d4d"; }
+    else if (strength <= 4) { msg = "Moderate"; color = "#ffbb33"; }
+    else { msg = "Strong"; color = "#6c5ce7"; }
+
+    strengthBar.style.background = color;
+    pass1Fb.textContent = msg;
+    pass1Fb.style.color = color;
+
+    if (pass2.value !== "") pass2.dispatchEvent(new Event('input'));
+  });
+
+  /* Confirm Password */
+  pass2.addEventListener('input', () => {
+    const match = pass2.value === pass1.value;
+    pass2Fb.textContent = match ? "Passwords match" : "Passwords do not match";
+    pass2Fb.style.color = match ? "#6c5ce7" : "#ff4d4d";
+  });
+
+  /* Eye toggles */
+  const toggleEye = (btn, input, svg) => {
+    let visible = false;
+    btn.addEventListener('click', () => {
+      visible = !visible;
+      input.type = visible ? "text" : "password";
+    });
+  };
+
+  toggleEye(
+    document.getElementById('togglePass1'),
+    pass1,
+    document.getElementById('eyeIcon1')
+  );
+
+  toggleEye(
+    document.getElementById('togglePass2'),
+    pass2,
+    document.getElementById('eyeIcon2')
+  );
+});
+</script>
+
+{% endblock %}

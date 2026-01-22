@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<main class="lesson-wrapper">
+
+  <section class="lesson-card">
+
+    <!-- ================= HEADER ================= -->
+    <header class="lesson-header fade-up">
+      <h1 class="lesson-title">{{ lesson.title }}</h1>
+      <p class="lesson-sub">
+        Lesson {{ lesson.order }} • {{ course.title }}
+      </p>
+    </header>
+
+    <!-- ================= VIDEO SECTION ================= -->
+    {% if lesson.video_1 or lesson.video_2 %}
+    <section class="lesson-videos fade-up">
+
+      {% if lesson.video_1 %}
+      <video class="lesson-video" controls preload="metadata">
+        <source src="{{ lesson.video_1.url }}" type="video/mp4">
+        Your browser does not support video.
+      </video>
+      {% endif %}
+
+      {% if lesson.video_2 %}
+      <video class="lesson-video" controls preload="metadata">
+        <source src="{{ lesson.video_2.url }}" type="video/mp4">
+        Your browser does not support video.
+      </video>
+      {% endif %}
+
+    </section>
+    {% endif %}
+
+    <!-- ================= IMAGE SECTION ================= -->
+    {% if lesson.image_1 or lesson.image_2 %}
+    <section class="lesson-images fade-up">
+
+      {% if lesson.image_1 %}
+      <img src="{{ lesson.image_1.url }}" class="lesson-image">
+      {% endif %}
+
+      {% if lesson.image_2 %}
+      <img src="{{ lesson.image_2.url }}" class="lesson-image">
+      {% endif %}
+
+    </section>
+    {% endif %}
+
+    <!-- ================= CONTENT ================= -->
+    <article class="lesson-content fade-up">
+      {{ lesson.content|safe }}
+    </article>
+
+    <!-- ================= ACTIONS ================= -->
+    <form method="post" class="lesson-actions fade-up">
+      {% csrf_token %}
+
+      <button type="submit" class="action-btn complete-btn">
+        {% if is_last %}
+          🎉 Finish Course
+        {% else %}
+          ✅ Complete & Continue
+        {% endif %}
+      </button>
+
+      <a href="{% url 'course_detail' course.slug %}"
+         class="action-btn back-btn">
+        ← Back to Course
+      </a>
+    </form>
+
+  </section>
+
+</main>
+
+<!-- ================= PURE OFFLINE CSS ================= -->
+<style>
+.lesson-wrapper {
+  max-width: 980px;
+  margin: 50px auto;
+  padding: 20px;
+  animation: pageFade .4s ease;
+}
+
+@keyframes pageFade {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.lesson-card {
+  background: rgba(18,15,28,.95);
+  border: 1px solid #2e2742;
+  border-radius: 22px;
+  padding: 34px;
+  box-shadow: 0 0 32px rgba(0,0,0,.5);
+}
+
+/* HEADER */
+.lesson-header {
+  border-bottom: 1px solid #2d2843;
+  padding-bottom: 18px;
+  margin-bottom: 26px;
+}
+
+.lesson-title {
+  font-size: 34px;
+  font-weight: 900;
+  color: #c7b9ff;
+}
+
+.lesson-sub {
+  font-size: 14px;
+  color: #9a8fd1;
+  margin-top: 4px;
+}
+
+/* VIDEOS */
+.lesson-videos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.lesson-video {
+  width: 100%;
+  border-radius: 14px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.45);
+}
+
+/* IMAGES */
+.lesson-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.lesson-image {
+  width: 100%;
+  border-radius: 14px;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.lesson-image:hover {
+  transform: scale(1.04);
+  box-shadow: 0 18px 40px rgba(0,0,0,.5);
+}
+
+/* CONTENT */
+.lesson-content {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #d1c7f5;
+  background: rgba(31,41,55,.75);
+  border: 1px solid #374151;
+  border-radius: 18px;
+  padding: 26px;
+  margin-bottom: 34px;
+}
+
+.lesson-content h2,
+.lesson-content h3 {
+  color: #e9ddff;
+  margin-top: 26px;
+}
+
+.lesson-content pre {
+  background: #0b0618;
+  border: 1px solid #2d2745;
+  padding: 16px;
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.lesson-content code {
+  background: #0f0b1d;
+  color: #a78bfa;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+/* ACTIONS */
+.lesson-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 14px 22px;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: .25s ease;
+  text-decoration: none;
+}
+
+/* PRIMARY */
+.complete-btn {
+  background: linear-gradient(135deg,#8b5cf6,#6366f1);
+  color: #05020d;
+  box-shadow: 0 0 18px rgba(139,92,246,.55);
+}
+
+.complete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 28px rgba(139,92,246,.85);
+}
+
+/* BACK */
+.back-btn {
+  background: rgba(148,163,184,.15);
+  color: #cbd5f5;
+  border: 1px solid #475569;
+}
+
+.back-btn:hover {
+  background: rgba(148,163,184,.25);
+}
+
+/* ANIMATION */
+.fade-up {
+  animation: fadeUp .5s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+{% endblock %}

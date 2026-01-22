@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<main class="course-wrapper">
+
+  <!-- ================= HEADER ================= -->
+  <section class="course-header">
+    <h1 class="course-title">{{ course.title }}</h1>
+    <p class="course-desc">{{ course.short_description }}</p>
+
+    {% if progress %}
+      {% widthratio progress.completed_lessons.count lessons.count 100 as percent %}
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: {{ percent }}%;"></div>
+      </div>
+      <span class="progress-text">
+        Progress: {{ progress.completed_lessons.count }} / {{ lessons.count }}
+      </span>
+    {% endif %}
+  </section>
+
+  <!-- ================= ACTIONS ================= -->
+  <section class="course-actions">
+
+    {% if not progress %}
+      <!-- NOT ENROLLED -->
+      <button class="action-btn primary" onclick="openEnrollModal()">
+        🚀 Enroll Now
+      </button>
+
+    {% elif progress and not progress.completed %}
+      <!-- IN PROGRESS -->
+      <button class="action-btn danger" onclick="openUnenrollModal()">
+        ❌ Quit Course
+      </button>
+
+    {% elif progress.completed %}
+      <!-- COMPLETED -->
+      <div class="completed-actions">
+        <span class="completed-text">✅ Course Completed</span>
+
+        <a href="{% url 'course_quiz_result' course.slug %}"
+           class="action-btn quiz">
+          🧠 View Quiz Result
+        </a>
+
+        {% comment %} {% with cert=course.certificate_set.filter(user=request.user).first %} {% endcomment %}
+          {% if cert %}
+            <a href="{% url 'certificate_preview' cert.id %}"
+               class="action-btn primary">
+              🎓 View Certificate
+            </a>
+          {% endif %}
+        {% comment %} {% endwith %} {% endcomment %}
+
+        <button class="action-btn danger" onclick="openUnenrollModal()">
+          🔁 Retake Course
+        </button>
+      </div>
+    {% endif %}
+
+  </section>
+
+  <!-- ================= LESSONS ================= -->
+  {% if progress %}
+  <section class="lessons-section">
+    <h2>📚 Lessons</h2>
+
+    {% for lesson in lessons %}
+      <div class="lesson-row
+        {% if lesson in progress.completed_lessons.all %}completed{% endif %}
+        {% if progress.current_lesson and lesson.id != progress.current_lesson.id and lesson not in progress.completed_lessons.all %}locked{% endif %}
+      ">
+
+        <span class="lesson-title">{{ lesson.title }}</span>
+
+        {% if lesson in progress.completed_lessons.all %}
+          <span class="status done">✔ Completed</span>
+
+        {% elif progress.current_lesson and lesson.id == progress.current_lesson.id %}
+          <a href="{% url 'lesson_view' course.slug lesson.id %}"
+             class="start-link">
+            ▶ Continue
+          </a>
+
+        {% else %}
+          <span class="status locked">🔒 Locked</span>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+</main>
+
+<!-- ================= ENROLL MODAL ================= -->
+<div id="enrollModal" class="modal">
+  <div class="modal-box">
+    <h3>Enroll in this course?</h3>
+    <p>Your progress will be tracked.</p>
+
+    <form method="post">
+      {% csrf_token %}
+      <button name="enroll" class="action-btn primary">
+        Yes, Enroll
+      </button>
+      <button type="button" class="action-btn ghost"
+              onclick="closeEnrollModal()">Cancel</button>
+    </form>
+  </div>
+</div>
+
+<!-- ================= RESET / RETAKE MODAL ================= -->
+<div id="unenrollModal" class="modal">
+  <div class="modal-box danger-box">
+    <h3>Reset Course?</h3>
+    <p>
+      ⚠ This will permanently remove:
+      <br>• lesson progress
+      <br>• quiz attempts
+      <br>• certificate & PDF
+    </p>
+
+    <form method="post">
+      {% csrf_token %}
+      <button name="unenroll" class="action-btn danger">
+        Yes, Reset Course
+      </button>
+      <button type="button" class="action-btn ghost"
+              onclick="closeUnenrollModal()">Cancel</button>
+    </form>
+  </div>
+</div>
+
+<!-- ================= JS ================= -->
+<script>
+function openEnrollModal() {
+  document.getElementById('enrollModal').classList.add('show');
+}
+function closeEnrollModal() {
+  document.getElementById('enrollModal').classList.remove('show');
+}
+function openUnenrollModal() {
+  document.getElementById('unenrollModal').classList.add('show');
+}
+function closeUnenrollModal() {
+  document.getElementById('unenrollModal').classList.remove('show');
+}
+</script>
+
+<!-- ================= CSS ================= -->
+<style>
+.course-wrapper {
+  max-width: 920px;
+  margin: 40px auto;
+  padding: 30px;
+  color: #e5e7eb;
+  animation: fadeUp .4s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(14px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+/* HEADER */
+.course-title {
+  font-size: 36px;
+  font-weight: 900;
+  color: #a78bfa;
+}
+.course-desc {
+  color: #b6b0d6;
+}
+
+/* PROGRESS */
+.progress-bar {
+  margin-top: 14px;
+  background: #1f2937;
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg,#8b5cf6,#6366f1);
+}
+.progress-text {
+  font-size: 13px;
+  color: #9ca3af;
+  margin-top: 6px;
+  display: block;
+}
+
+/* BUTTONS */
+.action-btn {
+  padding: 12px 22px;
+  margin-left: 10px;
+  text-decoration:none;
+  border-radius: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  border: none;
+  transition: all .25s ease;
+}
+.primary {
+  background: linear-gradient(135deg,#8b5cf6,#6366f1);
+  color: #05020d;
+}
+.quiz {
+  background: linear-gradient(135deg,#22c55e,#16a34a);
+  color: #05210f;
+}
+.danger {
+  background: rgba(239,68,68,.15);
+  color: #ef4444;
+  border: 1px solid #ef4444;
+}
+.completed-text {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-weight: 800;
+  color: #22c55e;
+}
+
+/* LESSONS */
+.lessons-section {
+  margin-top: 40px;
+}
+.lesson-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: rgba(31,41,55,.8);
+  margin-bottom: 10px;
+  border: 1px solid #374151;
+}
+.lesson-row.completed {
+  opacity: .6;
+}
+.lesson-row.locked {
+  opacity: .4;
+}
+.lesson-title {
+  font-weight: 700;
+}
+.start-link {
+  color: #8b5cf6;
+  font-weight: 700;
+  text-decoration: none;
+}
+.status.done { color: #22c55e; }
+.status.locked { color: #9ca3af; }
+
+/* MODALS */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: .3s;
+  z-index: 1000;
+}
+.modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal-box {
+  background: #0b0618;
+  border-radius: 16px;
+  padding: 26px;
+  width: 360px;
+  text-align: center;
+}
+.ghost {
+  background: transparent;
+  color: #9ca3af;
+}
+</style>
+
+{% endblock %}

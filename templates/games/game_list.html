@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+{% include 'includes/header.html' %}
+
+<div class="game-wrapper">
+
+    <h1 class="game-title">⚡ HackLabs — Mini Games</h1>
+    <p class="game-subtitle">
+        Play bite-sized cyber games to earn XP & level up your hacking skills.
+    </p>
+
+    <div class="game-grid">
+
+        {% for game in games %}
+        <div class="game-card">
+
+            <h2 class="game-name">{{ game.name }}</h2>
+            <p class="game-description">{{ game.description }}</p>
+
+            {% for gp in progress.values %}
+            {% if gp.game.id == game.id %}
+                <p class="game-score">
+                    Best Score: <strong>{{ gp.best_score }}</strong>
+                </p>
+            {% endif %}
+            {% endfor %}
+
+            <a href="{% url 'game_play' game.slug %}" class="game-play-btn">▶ PLAY</a>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% include 'includes/footer.html' %}
+
+<style>
+/* Page wrapper */
+.game-wrapper {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 10px 20px;
+}
+
+/* Title */
+.game-title {
+    font-size: 42px;
+    font-weight: 900;
+    color: #cabcff;
+    margin-bottom: 6px;
+}
+
+/* Subtitle */
+.game-subtitle {
+    color: rgba(205, 200, 255, 0.55);
+    margin-bottom: 40px;
+    font-size: 15px;
+}
+
+/* Grid layout */
+.game-grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* Game card */
+.game-card {
+    background: rgba(22, 24, 35, 0.88);
+    border: 1px solid #2c2f47;
+    border-radius: 12px;
+    padding: 24px;
+    transition: 0.25s ease;
+}
+
+/* Hover — clean and simple */
+.game-card:hover {
+    border-color: #7c6ee6;
+    background: rgba(28, 30, 45, 0.95);
+    transform: translateY(-3px);
+}
+
+/* Game name */
+.game-name {
+    font-size: 24px;
+    color: #e6e2ff;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+/* Description */
+.game-description {
+    color: rgba(220, 215, 255, 0.55);
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+/* Score */
+.game-score {
+    background: rgba(140, 125, 240, 0.08);
+    border-left: 4px solid #8d79ff;
+    padding: 6px 10px;
+    color: #dcd6ff;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    width: fit-content;
+}
+
+/* Play button */
+.game-play-btn {
+    display: inline-block;
+    padding: 10px 22px;
+    background: #7e6cf5;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.game-play-btn:hover {
+    background: #6c5ce7;
+    transform: scale(1.04);
+}
+</style>
+
+{% endblock %}

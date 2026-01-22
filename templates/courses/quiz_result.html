@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% block content %}
+
+<main class="result-wrapper">
+  <section class="result-card">
+
+    <h1 class="result-title">
+      {{ course.title }} – Quiz Result
+    </h1>
+
+    <!-- ================= PROGRESS RING ================= -->
+    <div
+      class="progress-ring"
+      data-percent="{{ percentage }}"
+      data-passed="{{ attempt.passed|yesno:'true,false' }}"
+    >
+      <svg width="180" height="180">
+        <circle cx="90" cy="90" r="80" class="ring-bg" />
+        <circle cx="90" cy="90" r="80" class="ring-progress" />
+      </svg>
+      <div class="percent-text">
+        <span id="percentValue">0</span>%
+      </div>
+    </div>
+
+    <!-- ================= SCORE ================= -->
+    <div class="score-box">
+      <p>Score</p>
+      <strong>{{ attempt.score }}/10</strong>
+    </div>
+
+    {% if attempt.passed %}
+
+      <!-- ================= PASSED ================= -->
+      <p class="result-status success">🎉 Passed</p>
+
+      <a
+        href="{% url 'certificate_view' certificate.id %}"
+        class="action-btn primary"
+      >
+        🏆 View Certificate
+      </a>
+
+      <a
+        href="{% url 'course_detail' course.slug %}"
+        class="action-btn ghost"
+      >
+        ← Back to Course
+      </a>
+
+      <form method="post" action="{% url 'course_detail' course.slug %}">
+        {% csrf_token %}
+        <button name="unenroll" class="action-btn danger">
+          🔁 Retake Course
+        </button>
+      </form>
+
+    {% else %}
+
+      <!-- ================= FAILED ================= -->
+      <p class="result-status failed">❌ Failed</p>
+
+      <a
+        href="{% url 'course_quiz' course.slug %}"
+        class="action-btn danger"
+      >
+        🔁 Retry Quiz
+      </a>
+
+      <a
+        href="{% url 'course_detail' course.slug %}"
+        class="action-btn ghost"
+      >
+        ← Quit Quiz
+      </a>
+
+    {% endif %}
+
+  </section>
+</main>
+
+<!-- ================= CSS ================= -->
+<style>
+.result-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 60px 20px;
+}
+
+.result-card {
+  max-width: 520px;
+  width: 100%;
+  background: rgba(18, 15, 28, 0.95);
+  border: 1px solid #2e2742;
+  border-radius: 22px;
+  padding: 36px;
+  text-align: center;
+}
+
+.result-title {
+  font-size: 26px;
+  font-weight: 900;
+  color: #c7b9ff;
+  margin-bottom: 30px;
+}
+
+.progress-ring {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 30px;
+}
+
+svg {
+  transform: rotate(-90deg);
+}
+
+circle {
+  fill: none;
+  stroke-width: 14;
+}
+
+.ring-bg {
+  stroke: #2d2843;
+}
+
+.ring-progress {
+  stroke-linecap: round;
+  stroke-dasharray: 502;
+  stroke-dashoffset: 502;
+  transition: stroke-dashoffset 1.5s ease;
+}
+
+.percent-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  font-weight: 900;
+  color: #e9ddff;
+}
+
+.result-status {
+  font-size: 18px;
+  font-weight: 800;
+  margin: 16px 0;
+}
+
+.success { color: #22c55e; }
+.failed { color: #ff6b6b; }
+
+.action-btn {
+  display: block;
+  margin: 12px auto;
+  padding: 14px 22px;
+  border-radius: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+.primary {
+  background: linear-gradient(135deg,#8b5cf6,#6366f1);
+  color: #05020d;
+}
+
+.danger {
+  background: rgba(255,90,90,.15);
+  color: #ff6b6b;
+  border: 1px solid #ff6b6b;
+}
+
+.ghost {
+  background: transparent;
+  color: #9ca3af;
+}
+</style>
+
+<!-- ================= JS ================= -->
+<script>
+(() => {
+  const ring = document.querySelector(".ring-progress");
+  const percentEl = document.getElementById("percentValue");
+  const wrapper = document.querySelector(".progress-ring");
+
+  const percent = parseInt(wrapper.dataset.percent);
+  const passed = wrapper.dataset.passed === "true";
+
+  const radius = 80;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (percent / 100) * circumference;
+
+  ring.style.strokeDasharray = circumference;
+  ring.style.strokeDashoffset = circumference;
+  ring.style.stroke = passed ? "#22c55e" : "#ff6b6b";
+
+  setTimeout(() => {
+    ring.style.strokeDashoffset = offset;
+  }, 300);
+
+  let current = 0;
+  const step = Math.ceil(percent / 40);
+  const timer = setInterval(() => {
+    current += step;
+    if (current >= percent) {
+      current = percent;
+      clearInterval(timer);
+    }
+    percentEl.textContent = current;
+  }, 30);
+})();
+</script>
+
+{% endblock %}

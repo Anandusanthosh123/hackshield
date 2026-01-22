@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "includes/header.html" %}
+
+<main class="page-wrapper">
+
+  <!-- ================= WARNING BOX ================= -->
+  <section class="danger-box">
+    <h2>⚠️ Delete Account</h2>
+
+    <p class="warning-text">
+      This action is <strong>permanent</strong> and cannot be undone.
+    </p>
+
+    <ul>
+      <li>Your profile will be removed</li>
+      <li>All progress, certificates & challenges will be deleted</li>
+      <li>You will lose access permanently</li>
+    </ul>
+  </section>
+
+  <!-- ================= CONFIRMATION ================= -->
+  <section class="danger-box">
+    <p><strong>Are you sure you want to delete your account?</strong></p>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <label for="password">Confirm your password</label>
+      <input
+        type="password"
+        name="password"
+        id="password"
+        placeholder="Enter your password"
+        required
+      >
+
+      <div class="btn-row">
+        <a href="{% url 'profile' request.user.username %}" class="cancel-btn">
+          Cancel
+        </a>
+
+        <button type="submit" class="delete-btn">
+          Delete Account Permanently
+        </button>
+      </div>
+    </form>
+  </section>
+
+</main>
+
+<style>
+.page-wrapper {
+  max-width: 720px;
+  margin: 80px auto;
+  padding: 20px;
+}
+
+.danger-box {
+  background: #120808;
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  border-radius: 14px;
+  padding: 26px;
+  margin-bottom: 24px;
+  color: #ffcccc;
+}
+
+.warning-text {
+  margin-bottom: 12px;
+  color: #ff6666;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  background: #020403;
+  border: 1px solid rgba(255, 0, 0, 0.4);
+  border-radius: 8px;
+  color: #fff;
+  margin-top: 10px;
+}
+
+.btn-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.cancel-btn {
+  flex: 1;
+  text-align: center;
+  padding: 12px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid #aaa;
+  color: #aaa;
+  text-decoration: none;
+}
+
+.delete-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  background: #ff0033;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #cc0029;
+}
+</style>
+
+{% endblock %}

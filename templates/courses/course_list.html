@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% include 'includes/header.html' %}
+
+<main class="course-list-wrapper">
+
+  <header class="page-header fade-up">
+    <h1 class="title">📘 Available Courses</h1>
+    <p class="subtitle">Choose a course to learn, practice, and earn XP.</p>
+  </header>
+
+  <div class="course-grid">
+
+    {% for course in courses %}
+    <div class="course-card fade-up">
+
+      <!-- IMAGE -->
+      {% if course.thumbnail %}
+        <img src="{{ course.thumbnail.url }}" class="course-img">
+      {% else %}
+        <div class="course-img placeholder">💻</div>
+      {% endif %}
+
+      <!-- BODY -->
+      <div class="course-body">
+        <h2 class="course-title">{{ course.title }}</h2>
+        <p class="course-desc">{{ course.short_description }}</p>
+      </div>
+
+      <!-- STATUS -->
+      <div class="course-status">
+        {% if course.user_progress %}
+          {% if course.user_progress.completed %}
+            <span class="badge completed">✔ Completed</span>
+          {% else %}
+            <span class="badge enrolled">⏳ Enrolled</span>
+          {% endif %}
+        {% else %}
+          <span class="badge not-enrolled">🔒 Not Enrolled</span>
+        {% endif %}
+      </div>
+
+      <!-- ACTION -->
+      <div class="course-action">
+        {% if course.user_progress %}
+          {% if course.user_progress.completed %}
+            <a href="{% url 'course_detail' course.slug %}"
+               class="btn secondary">
+              View Course
+            </a>
+          {% else %}
+            <a href="{% url 'course_detail' course.slug %}"
+               class="btn primary">
+              Continue
+            </a>
+          {% endif %}
+        {% else %}
+          <a href="{% url 'course_detail' course.slug %}"
+             class="btn primary">
+            View Course
+          </a>
+        {% endif %}
+      </div>
+
+    </div>
+    {% empty %}
+      <p class="empty">No courses available.</p>
+    {% endfor %}
+
+  </div>
+
+</main>
+
+<!-- ================= OFFLINE CSS ================= -->
+<style>
+.course-list-wrapper {
+  max-width: 1150px;
+  margin: 40px auto;
+  padding: 30px;
+  color: #e5e7eb;
+}
+
+/* HEADER */
+.page-header {
+  margin-bottom: 28px;
+}
+
+.title {
+  font-size: 34px;
+  font-weight: 900;
+  color: #c7b9ff;
+}
+
+.subtitle {
+  color: #a59dcf;
+  font-size: 15px;
+}
+
+/* GRID */
+.course-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
+  gap: 24px;
+}
+
+/* CARD */
+.course-card {
+  background: rgba(18,15,28,.92);
+  border: 1px solid #2d2745;
+  border-radius: 20px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: .3s ease;
+  box-shadow: 0 0 0 rgba(0,0,0,0);
+}
+
+.course-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 30px rgba(139,92,246,.35);
+  border-color: #8b5cf6;
+}
+
+/* IMAGE */
+.course-img {
+  width: 100%;
+  height: 160px;
+  border-radius: 16px;
+  object-fit: cover;
+  margin-bottom: 14px;
+}
+
+.placeholder {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:34px;
+  background:#0f0b1d;
+  color:#8b5cf6;
+}
+
+/* BODY */
+.course-body {
+  flex: 1;
+}
+
+.course-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #c7b9ff;
+}
+
+.course-desc {
+  font-size: 14px;
+  color: #a59dcf;
+  margin: 8px 0 14px;
+}
+
+/* STATUS */
+.course-status {
+  margin-bottom: 12px;
+}
+
+.badge {
+  display:inline-block;
+  padding:6px 14px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.enrolled {
+  background: rgba(139,92,246,.15);
+  color:#c4b5fd;
+}
+
+.completed {
+  background: rgba(34,197,94,.15);
+  color:#22c55e;
+}
+
+.not-enrolled {
+  background: rgba(148,163,184,.15);
+  color:#94a3b8;
+}
+
+/* ACTION */
+.course-action {
+  margin-top: auto;
+}
+
+.btn {
+  display:block;
+  text-align:center;
+  padding:12px;
+  border-radius:14px;
+  font-weight:800;
+  text-decoration:none;
+  transition:.25s;
+}
+
+.primary {
+  background: linear-gradient(135deg,#8b5cf6,#6366f1);
+  color:#05020d;
+}
+
+.secondary {
+  background:#1f2937;
+  color:#e5e7eb;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+/* ANIMATION */
+.fade-up {
+  animation: fadeUp .45s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(12px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+.empty {
+  opacity:.6;
+  text-align:center;
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,45 @@
+<header style="
+  width:100%;
+  background:rgba(11,15,23,0.85);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--border-color);
+  padding:18px 0;
+  position:sticky;
+  top:0;
+  z-index:100;
+">
+  <div style="
+    max-width:1150px;
+    margin:auto;
+    padding:0 20px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  ">
+
+    <!-- Logo -->
+    <div style="
+      font-size:1.7rem;
+      font-weight:800;
+      background:linear-gradient(90deg,#9b72ff,#5a5cff);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      letter-spacing:-1px;
+    ">
+      HackShield
+    </div>
+
+    <!-- NAV -->
+    <nav style="display:flex; align-items:center; gap:26px;">
+      <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+      <a href="{% url 'leaderboard' %}" class="nav-link">Leaderboard</a>
+      <a href="{% url 'profile' user.username %}" class="nav-link">Profile</a>
+
+      <a href="{% url 'logout' %}" class="btn btn-primary" 
+         style="padding:8px 18px; font-size:0.9rem;">
+        Logout
+      </a>
+    </nav>
+
+  </div>
+</header>

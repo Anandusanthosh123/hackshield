@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<style>
+/* =========================
+   PAGE SETUP
+========================= */
+@page {
+    size: 1200px 750px;
+    margin: 0;
+}
+
+html, body {
+    width: 1200px;
+    height: 750px;
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", "Segoe UI", Arial, sans-serif;
+    background: #ffffff;
+}
+
+/* =========================
+   CERTIFICATE CONTAINER
+========================= */
+.certificate {
+    width: 1200px;
+    height: 750px;
+    padding: 40px;
+    box-sizing: border-box;
+    position: relative;
+    border: 10px solid #6c63ff;
+}
+
+/* Decorative corners */
+.corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #6c63ff;
+}
+.top-left { top: 15px; left: 15px; border-right: none; border-bottom: none; }
+.top-right { top: 15px; right: 15px; border-left: none; border-bottom: none; }
+.bottom-left { bottom: 15px; left: 15px; border-right: none; border-top: none; }
+.bottom-right { bottom: 15px; right: 15px; border-left: none; border-top: none; }
+
+/* =========================
+   HEADER
+========================= */
+.header {
+    text-align: center;
+}
+
+.brand {
+    font-size: 32px;
+    font-weight: 900;
+    color: #6c63ff;
+    letter-spacing: 1px;
+}
+
+.tagline {
+    font-size: 14px;
+    color: #555;
+    margin-top: 4px;
+}
+
+/* =========================
+   TITLE
+========================= */
+.title {
+    text-align: center;
+    margin: 40px 0 10px;
+    font-size: 46px;
+    font-weight: 900;
+    color: #111;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+}
+
+/* =========================
+   RECIPIENT
+========================= */
+.recipient {
+    text-align: center;
+    margin: 35px 0 10px;
+    font-size: 36px;
+    font-weight: 900;
+    color: #000;
+}
+
+.course-text {
+    text-align: center;
+    font-size: 16px;
+    color: #444;
+    margin-top: 8px;
+}
+
+.course-name {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 22px;
+    font-weight: 800;
+    color: #6c63ff;
+}
+
+/* =========================
+   FOOTER
+========================= */
+.footer {
+    position: absolute;
+    bottom: 50px;
+    left: 60px;
+    right: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* META */
+.meta {
+    font-size: 13px;
+    color: #444;
+}
+.meta strong {
+    color: #000;
+}
+
+/* =========================
+   PREMIUM BADGE
+========================= */
+.badge {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle at top, #8b82ff, #5b52d9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 0 12px 25px rgba(108, 99, 255, 0.35);
+    border: 6px double #ffffff;
+}
+
+.badge-inner {
+    color: #fff;
+    font-weight: 900;
+    font-size: 14px;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.badge-inner span {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 6px;
+    opacity: 0.9;
+}
+
+/* =========================
+   QR CODE
+========================= */
+.qr {
+    text-align: center;
+}
+
+.qr img {
+    width: 90px;
+    height: 90px;
+}
+
+.qr span {
+    display: block;
+    font-size: 11px;
+    margin-top: 4px;
+    color: #555;
+}
+</style>
+</head>
+
+<body>
+
+<div class="certificate">
+
+    <!-- Corners -->
+    <div class="corner top-left"></div>
+    <div class="corner top-right"></div>
+    <div class="corner bottom-left"></div>
+    <div class="corner bottom-right"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="brand">HackShield</div>
+        <div class="tagline">Professional Cybersecurity Training</div>
+    </div>
+
+    <!-- Title -->
+    <div class="title">Certificate of Completion</div>
+    <div class="subtitle">This certificate is proudly presented to</div>
+
+    <!-- Recipient -->
+    <div class="recipient">
+        {{ certificate.recipient_name }}
+    </div>
+
+    <div class="course-text">
+        for successfully completing the course
+    </div>
+
+    <div class="course-name">
+        {{ certificate.related_course.title }}
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+
+        <!-- Meta -->
+        <div class="meta">
+            <div><strong>Issued on:</strong> {{ certificate.issued_at|date:"F d, Y" }}</div>
+            <div><strong>Certificate ID:</strong> {{ certificate.certificate_id }}</div>
+        </div>
+
+        <!-- Premium Badge -->
+        <div class="badge">
+            <div class="badge-inner">
+                Verified<br>Excellence
+                <span>Official Credential</span>
+            </div>
+        </div>
+
+        <!-- QR -->
+        <div class="qr">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ certificate.certificate_id }}">
+            <span>Verify Certificate</span>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

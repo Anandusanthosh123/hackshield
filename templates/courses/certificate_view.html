@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="cert-overlay" id="certOverlay">
+  <div class="cert-modal">
+
+    <button class="close-btn" onclick="closeCert()">✕</button>
+
+    <!-- Certificate Preview -->
+    <div class="certificate">
+      <h1>Certificate of Completion</h1>
+      <p>This is proudly presented to</p>
+      <h2>{{ certificate.recipient_name }}</h2>
+      <p>for successfully completing</p>
+      <h3>{{ certificate.related_course.title }}</h3>
+
+      <span class="issued">
+        Issued on {{ certificate.issued_at|date:"M d, Y" }}
+      </span>
+    </div>
+
+    <!-- Actions -->
+    <div class="cert-actions">
+      {% comment %} <a href="{{ certificate.file.url }}" class="btn" download>⬇ Download</a> {% endcomment %}
+      <button class="btn" onclick="shareCert()">🔗 Share</button>
+      <a href="{% url 'profile' request.user.username %}" class="btn primary">
+        ➕ Add to Profile
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function closeCert() {
+  document.getElementById('certOverlay').classList.add('fade-out');
+  setTimeout(() => {
+    window.location.href = "{% url 'profile' request.user.username %}";
+  }, 400);
+}
+
+function shareCert() {
+  navigator.share({
+    title: "My HackShield Certificate",
+    url: window.location.href
+  });
+}
+</script>
+
+<style>
+.cert-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.cert-modal {
+  background: radial-gradient(circle,#15102b,#0b0618);
+  padding: 30px;
+  border-radius: 20px;
+  width: 720px;
+  animation: pop .4s ease;
+  position: relative;
+}
+
+@keyframes pop {
+  from { transform: scale(.8); opacity: 0 }
+  to   { transform: scale(1); opacity: 1 }
+}
+
+.fade-out {
+  animation: fadeOut .4s forwards;
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; transform: scale(.9); }
+}
+
+.close-btn {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  background: none;
+  color: #aaa;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.certificate {
+  border: 2px solid #8d79ff;
+  border-radius: 14px;
+  padding: 26px;
+  text-align: center;
+}
+
+.certificate h1 { color: #bba7ff; }
+.certificate h2 { color: white; font-size: 30px; }
+.certificate h3 { color: #8d79ff; }
+
+.issued {
+  display: block;
+  margin-top: 12px;
+  color: #aaa;
+}
+
+.cert-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.btn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: #1f2937;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: linear-gradient(135deg,#8d79ff,#6c5ce7);
+}
+</style>
+
+{% endblock %}

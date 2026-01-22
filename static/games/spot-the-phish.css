@@ -1,0 +1,116 @@
+/* Spot the Phish — HackShield (purple + cyan animated theme)
+   Pure CSS, no external libs.
+*/
+
+/* ---------- Root tokens ---------- */
+:root{
+  --bg:#06060b;
+  --panel:#121222;
+  --muted:#9ea3c4;
+  --accent:#8d79ff;      /* purple */
+  --accent-2:#6ce7e0;    /* cyan */
+  --good:#7ef5b8;
+  --bad:#ff8b8b;
+  --glass: rgba(255,255,255,0.03);
+  --card-radius:14px;
+}
+
+/* ---------- Page ---------- */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:Inter, Roboto, system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(141,121,255,0.04), transparent 10%),
+    linear-gradient(180deg, #05050a 0%, var(--bg) 100%);
+  color:#e8e9f6;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  padding-bottom:48px;
+}
+
+/* page wrapper */
+.page{max-width:1100px;margin:28px auto;padding:14px}
+
+/* ---------- Header ---------- */
+.header{display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
+.header-inner{display:flex;flex-direction:column;gap:6px}
+.header h1{margin:0;font-size:28px;color:var(--accent)}
+.lead{margin:0;color:var(--muted);font-size:14px}
+
+/* statusbar */
+.statusbar{display:flex;gap:14px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.statusbar .stat{background:var(--glass);padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);color:var(--muted);font-size:13px}
+
+/* ---------- Card / Panel ---------- */
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:18px;padding:20px; box-shadow: 0 6px 30px rgba(0,0,0,0.6); border:1px solid rgba(141,121,255,0.06)}
+.panel{display:flex;flex-direction:column;gap:18px}
+
+/* email card */
+.email-card{background:linear-gradient(90deg, rgba(18,15,28,0.9), rgba(20,18,34,0.85)); padding:18px;border-radius:12px;border:1px solid rgba(141,121,255,0.06); min-height:220px; transition:transform .28s cubic-bezier(.2,.9,.3,1), box-shadow .28s}
+.email-card.show-correct{box-shadow:0 10px 40px rgba(110,220,190,0.06); transform:translateY(-6px)}
+.email-card.show-wrong{box-shadow:0 10px 40px rgba(255,120,120,0.06); transform:translateY(2px)}
+
+/* meta */
+.email-meta{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.email-meta .from{color:var(--muted);font-size:13px}
+.email-subject{font-weight:700;color:#e8e9f6;font-size:15px}
+
+/* tags (hidden visual hints for JS) */
+.tags{display:none}
+
+/* body */
+.email-body-wrap{background:rgba(0,0,0,0.25); padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.02); max-height:220px; overflow:auto}
+.email-body{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:14px; color:#dceef3; margin:0}
+
+/* links area (will display link list) */
+.email-links{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
+.email-links a{font-size:13px;padding:6px 8px;border-radius:8px;background:rgba(255,255,255,0.02);color:var(--accent-2);text-decoration:none;border:1px solid rgba(108,92,231,0.04)}
+
+/* ---------- Controls ---------- */
+.controls{display:flex;gap:12px; margin-top:16px; justify-content:center}
+.btn{padding:12px 18px;border-radius:12px;border:0;cursor:pointer;font-weight:700;letter-spacing:0.2px;min-width:140px; font-size:15px; transition: transform .14s ease, box-shadow .12s ease}
+.btn:active{transform:translateY(1px)}
+.btn-real{background:linear-gradient(90deg,var(--accent),#9aa0ff); color:#08121a; box-shadow: 0 6px 18px rgba(141,121,255,0.14)}
+.btn-phish{background:linear-gradient(90deg,#62dedb,#34c5ff); color:#041017; box-shadow: 0 6px 18px rgba(52,197,255,0.08)}
+
+.controls .btn:focus{outline:2px solid rgba(140,120,255,0.12); outline-offset:3px}
+
+/* ---------- Feedback ---------- */
+.feedback{min-height:48px;margin-top:12px;padding:10px;border-radius:10px;font-size:14px;display:flex;align-items:center;gap:12px;justify-content:center; color:var(--muted)}
+.feedback.correct{background:linear-gradient(90deg, rgba(126,245,184,0.06), rgba(126,245,184,0.02)); color:var(--good)}
+.feedback.wrong{background:linear-gradient(90deg, rgba(255,139,139,0.04), rgba(255,139,139,0.02)); color:var(--bad)}
+
+/* reason chips */
+.reason-list{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.reason{background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:999px;font-size:13px;color:var(--muted)}
+
+/* progress + tip */
+.meta-row{display:flex;align-items:center;justify-content:space-between;margin-top:16px;gap:12px;flex-wrap:wrap}
+.tip{color:var(--muted);font-size:13px}
+.progress{width:320px;max-width:60%}
+.progress-bar{height:10px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden;border:1px solid rgba(255,255,255,0.02)}
+#progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));width:0%;transition:width .45s cubic-bezier(.2,.9,.3,1)}
+
+/* footer */
+.footer{color:var(--muted);text-align:center;margin-top:18px;font-size:13px}
+
+/* ---------- small screens ---------- */
+@media (max-width:720px){
+  .statusbar{flex-direction:column;align-items:flex-start;gap:8px}
+  .controls{flex-direction:column}
+  .controls .btn{width:100%;min-width:unset}
+  .progress{max-width:100%}
+}
+
+/* little entrance */
+.email-card, .controls, .feedback { will-change:transform,opacity; animation:fadeInUp .36s ease both }
+@keyframes fadeInUp{ from {opacity:0; transform: translateY(8px)} to {opacity:1; transform: translateY(0)} }
+
+/* highlight helpers JS will toggle */
+.hilite-bad{background:linear-gradient(90deg, rgba(255,90,90,0.08), rgba(255,90,90,0.03)); border-radius:6px; padding:2px 6px}
+.hilite-good{background:linear-gradient(90deg, rgba(126,245,184,0.06), rgba(126,245,184,0.02)); border-radius:6px; padding:2px 6px}
+
+/* accessible focus */
+a:focus, button:focus {outline: 3px solid rgba(140,120,255,0.12); outline-offset:3px}

@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+
+<!-- HERO SECTION -->
+
+
+<section style="text-align:center; padding:40px 20px 80px;">
+        <img src="{% static 'images/hackshield-logo.png' %}" 
+     alt="HackShield Logo" 
+     class="hs-logo">
+    <h1 style="margin-bottom:20px;">HackShield</h1>
+
+    <p style="max-width:750px; margin:0 auto; font-size:1.25rem; color:var(--text-soft);">
+        Learn • Play • Defend — Master Cybersecurity Skills with Modern Interactive Training.
+    </p>
+
+    <p style="max-width:650px; margin:18px auto 0; color:var(--text-soft);">
+        A gamified learning platform combining challenges, labs, leaderboards, and AI-driven skill tracking.
+    </p>
+
+    <!-- CTA Buttons -->
+    <div style="margin-top:45px; display:flex; justify-content:center; gap:20px; flex-wrap:wrap;">
+        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+        <a href="{% url 'register' %}" class="btn btn-outline">Get Started Free</a>
+    </div>
+
+</section>
+
+
+<!-- FEATURES SECTION -->
+<section style="max-width:1100px; margin:auto; padding:60px 20px;">
+    <h2 style="text-align:center;">Why Choose HackShield?</h2>
+
+    <div class="grid grid-3">
+
+        <div class="card" style="text-align:center;">
+            <div style="font-size:2.4rem;">🧠</div>
+            <div class="card-title">Learn Smarter</div>
+            <p class="card-desc">
+                Adaptive learning paths that evolve to your skill level with guided lessons.
+            </p>
+        </div>
+
+        <div class="card" style="text-align:center;">
+            <div style="font-size:2.4rem;">🎯</div>
+            <div class="card-title">Stay Motivated</div>
+            <p class="card-desc">
+                Earn XP, badges, leaderboard ranking, and daily streak bonuses.
+            </p>
+        </div>
+
+        <div class="card" style="text-align:center;">
+            <div style="font-size:2.4rem;">🔒</div>
+            <div class="card-title">Secure Progress</div>
+            <p class="card-desc">
+                Account progress is stored securely with modern encryption practices.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- LEARNING PATHS -->
+<section style="max-width:1150px; margin:auto; padding:60px 20px;">
+    <h2 style="text-align:center;">Explore Cybersecurity Topics</h2>
+
+    <div class="grid grid-3">
+
+        <div class="card">
+            <div class="card-title">🕵️ Ethical Hacking Basics</div>
+            <p class="card-desc">Learn reconnaissance, vulnerabilities, and penetration testing essentials.</p>
+            <a href="{% url 'register' %}" class="btn btn-outline" style="padding:8px 14px; margin-top:15px; display:inline-block;">
+                Start Now →
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-title">💡 Phishing Awareness</div>
+            <p class="card-desc">Recognize phishing attempts & understand social engineering attacks.</p>
+            <a href="{% url 'register' %}" class="btn btn-outline" style="padding:8px 14px; margin-top:15px; display:inline-block;">
+                Start Now →
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🧩 Password Security</div>
+            <p class="card-desc">Understand strong password creation & how credential leaks occur.</p>
+            <a href="{% url 'register' %}" class="btn btn-outline" style="padding:8px 14px; margin-top:15px; display:inline-block;">
+                Start Now →
+            </a>
+        </div>
+
+    </div>
+</section>
+
+
+<!-- MINI LABS -->
+<section style="max-width:1150px; margin:auto; padding:60px 20px;">
+    
+    <h2 style="text-align:center;">🎮 Practice with Mini Labs</h2>
+
+    <p style="max-width:700px; margin:0 auto 40px; text-align:center; color:var(--text-soft);">
+        Hands-on cybersecurity simulations crafted to reinforce real-world defensive skills.
+    </p>
+
+    <div class="grid grid-3">
+
+        <div class="card">
+            <div class="card-title">🎣 Spot the Phish</div>
+            <p class="card-desc">Analyze suspicious emails — identify common phishing indicators.</p>
+            <a href="{% url 'login' %}" class="btn btn-outline" style="padding:8px 14px; margin-top:15px; display:inline-block;">
+                Try Game →
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-title">⌨️ Password Builder</div>
+            <p class="card-desc">Test your typing reflexes while learning strong password patterns.</p>
+            <a href="{% url 'login' %}" class="btn btn-outline" style="padding:8px 14px; margin-top:15px; display:inline-block;">
+                Try Game →
+            </a>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🛡️Secure-or-Scam💀 </div>
+            <p class="card-desc">Stop incoming cyber threats in an interactive defense simulation.</p>
+            <a href="{% url 'login' %}" class="btn btn-outline" style="padding:8px 14px; margin-top:15px; display:inline-block;">
+                Try Game →
+            </a>
+        </div>
+
+    </div>
+
+</section>
+
+{% comment %} 
+<!-- FOOTER -->
+<footer style="text-align:center; margin-top:60px; padding:20px; color:var(--text-soft);">
+    © 2025 HackShield • Professional Cybersecurity Learning
+</footer> {% endcomment %}
+
+{% endblock %}

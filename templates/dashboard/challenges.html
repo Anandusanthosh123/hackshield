@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include 'includes/header.html' %}
+
+<main class="page-container">
+
+    <!-- PAGE HEADER -->
+    <section class="page-header fade-in">
+        <div class="header-text">
+            <h1 class="page-title">⚔️ Cyber Challenges</h1>
+            <p class="page-subtitle">
+                Solve challenges, capture flags, and boost your hacking reputation. Earn XP and climb the leaderboard!
+            </p>
+        </div>
+
+        <a href="{% url 'challenge_history' %}" class="history-btn">
+            📜 View Challenge History
+        </a>
+    </section>
+
+    <!-- CHALLENGES GRID -->
+    <section class="challenge-grid fade-in">
+        {% for ch in challenges %}
+        <a href="{% url 'challenge_detail' ch.slug %}" class="challenge-card">
+
+            <!-- STATUS BADGE -->
+            {% if ch.id in solved_ids %}
+            <span class="status-badge solved">✅ Solved</span>
+            {% else %}
+            <span class="status-badge pending">🕵️‍♂️ Pending</span>
+            {% endif %}
+
+            <!-- Thumbnail -->
+            {% if ch.thumbnail %}
+            <img src="{{ ch.thumbnail.url }}" alt="{{ ch.title }}" class="challenge-thumb">
+            {% else %}
+            <div class="challenge-thumb placeholder">🧠</div>
+            {% endif %}
+
+            <!-- Title -->
+            <h3 class="challenge-title">{{ ch.title }}</h3>
+
+            <!-- Description -->
+            <p class="challenge-desc">{{ ch.description }}</p>
+
+            <!-- Difficulty + XP -->
+            <div class="challenge-meta">
+                <span class="difficulty-badge 
+                    {% if ch.difficulty == 'Easy' %} diff-easy
+                    {% elif ch.difficulty == 'Medium' %} diff-medium
+                    {% else %} diff-hard
+                    {% endif %}">
+                    💀 {{ ch.difficulty }}
+                </span>
+
+                <span class="xp-text">🎯 +{{ ch.xp_reward }} XP</span>
+            </div>
+
+            <!-- View Button -->
+            <button class="view-btn">View Challenge →</button>
+
+        </a>
+        {% empty %}
+        <p class="no-items">No challenges available yet.</p>
+        {% endfor %}
+    </section>
+
+    {% include 'includes/footer.html' %}
+</main>
+
+<!-- PURE CSS STYLES -->
+<style>
+/* Page Layout */
+.page-container {
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+/* Page Header */
+.page-header {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 35px;
+}
+@media (min-width: 640px) {
+    .page-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.page-title {
+    font-size: 42px;
+    font-weight: 800;
+    color: #00ff99;
+    margin-bottom: 5px;
+}
+
+.page-subtitle {
+    max-width: 600px;
+    color: #8debbd;
+    opacity: 0.8;
+    font-size: 14px;
+}
+
+/* History Button */
+.history-btn {
+    padding: 10px 18px;
+    background: rgba(0, 230, 118, 0.1);
+    border: 1px solid rgba(0, 230, 118, 0.3);
+    color: #00ff99;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: 0.25s;
+}
+.history-btn:hover {
+    background: rgba(0, 230, 118, 0.2);
+}
+
+/* Challenges Grid */
+.challenge-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+}
+@media (min-width: 640px) {
+    .challenge-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (min-width: 1024px) {
+    .challenge-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Challenge Card */
+.challenge-card {
+    position: relative;
+    padding: 20px;
+    border-radius: 22px;
+    background: rgba(10, 15, 10, 0.9);
+    border: 1px solid rgba(0, 230, 118, 0.1);
+    text-decoration: none;
+    display: block;
+    color: #00ff99;
+    transition: 0.35s;
+    backdrop-filter: blur(12px);
+}
+
+.challenge-card:hover {
+    border-color: rgba(0, 230, 118, 0.4);
+    box-shadow: 0 0 18px rgba(0, 255, 153, 0.15);
+    transform: translateY(-4px);
+}
+
+/* Status Badge */
+.status-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+.solved {
+    background: rgba(0, 230, 118, 0.15);
+    border: 1px solid rgba(0, 230, 118, 0.35);
+    color: #00ff99;
+}
+.pending {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 230, 118, 0.15);
+    color: #8debbd;
+}
+
+/* Thumbnail */
+.challenge-thumb {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 14px;
+    margin-bottom: 14px;
+    transition: 0.4s;
+}
+.challenge-card:hover .challenge-thumb {
+    transform: scale(1.05);
+}
+
+.challenge-thumb.placeholder {
+    background: #0b0b0b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 42px;
+    color: #00ff99;
+}
+
+/* Titles & Text */
+.challenge-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #00ff99;
+    margin-bottom: 6px;
+}
+.challenge-desc {
+    color: #8debbd;
+    opacity: 0.7;
+    font-size: 14px;
+    height: 48px;
+    overflow: hidden;
+}
+
+/* Metadata Row */
+.challenge-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 14px;
+    margin-bottom: 10px;
+    font-size: 12px;
+}
+
+/* Difficulty Badges */
+.difficulty-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.diff-easy {
+    background: rgba(0, 230, 118, 0.15);
+    color: #00ff99;
+}
+.diff-medium {
+    background: rgba(255, 193, 7, 0.25);
+    color: #ffd86b;
+}
+.diff-hard {
+    background: rgba(255, 90, 90, 0.25);
+    color: #ff9c9c;
+}
+
+/* XP */
+.xp-text {
+    color: #00ff99;
+    font-weight: 600;
+}
+
+/* View Button */
+.view-btn {
+    width: 100%;
+    background: rgba(0, 230, 118, 0.12);
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    color: #00ff99;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s;
+}
+.view-btn:hover {
+    background: rgba(0, 230, 118, 0.25);
+}
+
+/* Empty message */
+.no-items {
+    text-align: center;
+    color: #8debbd;
+    opacity: 0.6;
+    padding: 40px 0;
+    font-size: 14px;
+}
+
+/* Animation */
+.fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+{% endblock %}

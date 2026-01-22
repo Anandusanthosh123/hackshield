@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-container">
+
+    <h2 class="section-title">🧪 Hacking Labs</h2>
+
+    <div class="lab-grid">
+
+        {% for lab in labs %}
+        <div class="lab-card">
+
+            <div class="lab-header">
+                <h3>{{ lab.title }}</h3>
+                <span class="lab-difficulty {{ lab.difficulty|lower }}">{{ lab.difficulty }}</span>
+            </div>
+
+            <p class="lab-desc">{{ lab.description|truncatechars:120 }}</p>
+
+            {% if progress.lab.id == lab.id %}
+                {% if progress.completed %}
+                    <div class="lab-status done">✔ Completed</div>
+                {% elif progress.kali_container_id %}
+                    <div class="lab-status running">🟢 Running</div>
+                {% else %}
+                    <div class="lab-status not-started">⚪ Ready</div>
+                {% endif %}
+            {% endif %}
+
+            <a href="{% url 'lab_detail' lab.slug %}" class="btn-open">Open Lab</a>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+<style>
+.section-title {
+    font-size: 26px;
+    margin-bottom: 20px;
+    color: #a78bfa;
+}
+
+.lab-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.lab-card {
+    background: rgba(20,26,41,0.75);
+    border: 1px solid #2d334a;
+    padding: 20px;
+    border-radius: 12px;
+    transition: 0.3s;
+}
+.lab-card:hover {
+    border-color: #a78bfa;
+    transform: translateY(-3px);
+}
+
+.lab-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.lab-difficulty {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #fff;
+}
+.lab-difficulty.easy { background: #10b981; }
+.lab-difficulty.medium { background: #f59e0b; }
+.lab-difficulty.hard { background: #ef4444; }
+
+.lab-desc { opacity: 0.8; margin: 10px 0 12px; }
+
+.lab-status {
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+.running { color: #10b981; }
+.done { color: #60a5fa; }
+.not-started { color: #9ca3af; }
+
+.btn-open {
+    padding: 10px 20px;
+    background: #6d28d9;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+.btn-open:hover {
+    background: #7c3aed;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,125 @@
+<!-- floating_back_btn.html
+     Drop-in component that injects a fixed, themed "Back" button into the page.
+     Works even if other CSS files are missing or override rules.
+-->
+<script>
+(function(){
+  // Avoid duplicate injection
+  if (document.getElementById('hs-back-btn-root')) return;
+
+  // Create a root container appended to body (ensures it's outside any transformed parents)
+  const root = document.createElement('div');
+  root.id = 'hs-back-btn-root';
+  document.body.appendChild(root);
+
+  // Add styles (scoped via id to avoid collisions)
+  const style = document.createElement('style');
+  style.id = 'hs-back-btn-styles';
+  style.textContent = `
+    /* Container (keeps pointer events consistent) */
+    #hs-back-btn-root { position: fixed; top: 18px; left: 18px; z-index: 2147483647; pointer-events: none; }
+
+    /* The button */
+    #hs-back-btn {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      font-weight: 700;
+      font-size: 14px;
+      color: #0b1220;
+      text-decoration: none;
+      background: linear-gradient(90deg, #8d79ff 0%, #6c5ce7 45%, #4be8dd 100%);
+      box-shadow: 0 8px 28px rgba(76,63,179,0.28), 0 2px 6px rgba(11,12,20,0.45), inset 0 -1px 0 rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      cursor: pointer;
+      transition: transform .18s ease, box-shadow .18s ease, opacity .12s;
+      opacity: 0.98;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    #hs-back-btn:focus { outline: none; box-shadow: 0 10px 30px rgba(76,63,179,0.35); transform: translateY(-1px); }
+
+    #hs-back-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 34px rgba(76,63,179,0.38); opacity: 1; }
+
+    #hs-back-btn:active { transform: translateY(0); box-shadow: 0 6px 18px rgba(76,63,179,0.26); }
+
+    /* icon circle left — matches theme */
+    #hs-back-btn .hs-icon {
+      display:inline-grid;
+      place-items:center;
+      width:34px;
+      height:34px;
+      border-radius:9px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+      color: #0b1220;
+      font-weight:800;
+      font-size:16px;
+      box-shadow: 0 2px 8px rgba(11,12,20,0.45), inset 0 -1px 0 rgba(255,255,255,0.06);
+    }
+
+    /* small screen adjustments */
+    @media (max-width:560px){
+      #hs-back-btn-root { top: 12px; left: 12px; }
+      #hs-back-btn { padding: 7px 12px; font-size:13px; border-radius:10px; }
+      #hs-back-btn .hs-icon { width:30px; height:30px; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Create button element
+  const btn = document.createElement('button');
+  btn.id = 'hs-back-btn';
+  btn.type = 'button';
+  btn.setAttribute('aria-label', 'Go back');
+  btn.innerHTML = `<span class="hs-icon">←</span><span>Back</span>`;
+
+  // Click handler — use history.back but fall back to site root if history length is small
+  btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    try {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        // fallback route — go to dashboard or root (adjust if you have a specific route)
+        window.location.href = '/';
+      }
+    } catch (err) {
+      window.location.href = '/';
+    }
+  });
+
+  // keyboard: go back on Enter / Space
+  btn.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Enter' || ev.key === ' ') {
+      ev.preventDefault();
+      btn.click();
+    }
+  });
+
+  // put button into root
+  root.appendChild(btn);
+
+  // Accessibility: ensure button focusable
+  btn.tabIndex = 0;
+
+  // If developer wants to hide it (for certain pages) they can set window.HS_HIDE_BACK_BTN = true before this script runs
+  if (window.HS_HIDE_BACK_BTN) {
+    root.style.display = 'none';
+  }
+
+  // Expose helper for runtime show/hide
+  window.HSBackBtn = {
+    show() { root.style.display = ''; },
+    hide() { root.style.display = 'none'; },
+    element() { return btn; }
+  };
+})();
+</script>
