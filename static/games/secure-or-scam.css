@@ -8,6 +8,9 @@
   --title: #32ffd2;
   --safe: #0dbb7d;
   --scam: #d93a3a;
+  --correct: #0dbb7d;
+  --wrong: #ff8c00;
+  --violet: #7c4dff;
 }
 
 body {
@@ -116,6 +119,21 @@ body {
   border-radius: 10px;
   border: 1px solid rgba(255,255,255,0.04);
   font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.explain.correct {
+  background: rgba(13, 187, 125, 0.15);
+  border-color: var(--correct);
+  color: var(--correct);
+  box-shadow: 0 0 15px rgba(13, 187, 125, 0.3);
+}
+
+.explain.wrong {
+  background: rgba(255, 140, 0, 0.15);
+  border-color: var(--wrong);
+  color: var(--wrong);
+  box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);
 }
 
 .foot {
@@ -124,4 +142,48 @@ body {
   color: #73ffe3;
   font-size: 0.9rem;
   opacity: 0.8;
+}
+
+/* ======================================================
+   VIOLET BANNER NOTIFICATION (MATCHES FLAG SUCCESS UI)
+   ====================================================== */
+
+.banner {
+  max-width: 1100px;
+  margin: 20px auto;
+  padding: 16px 22px;
+  border-radius: 14px;
+
+  background: linear-gradient(
+    90deg,
+    rgba(124, 77, 255, 0.18),
+    rgba(124, 77, 255, 0.06)
+  );
+
+  border-left: 4px solid var(--violet);
+  color: #e8ddff;
+
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+
+  box-shadow:
+    0 0 28px rgba(124, 77, 255, 0.25),
+    inset 0 0 0 1px rgba(255,255,255,0.05);
+
+  backdrop-filter: blur(10px);
+
+  transform: translateY(-10px);
+  opacity: 0;
+
+  transition: all 0.35s ease;
+}
+
+.banner.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.banner.hidden {
+  display: none;
 }

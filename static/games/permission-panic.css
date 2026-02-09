@@ -1,0 +1,85 @@
+body {
+  background: #0b0f14;
+  font-family: monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #eafff3;
+}
+
+.game-box {
+  background: #020408;
+  border: 1px solid #00ff99;
+  border-radius: 14px;
+  padding: 30px;
+  width: 380px;
+  text-align: center;
+  box-shadow: 0 0 25px rgba(0,255,153,0.2);
+}
+
+h1 {
+  color: #00ff99;
+  margin-bottom: 20px;
+}
+
+.app-name {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.permission {
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+
+.buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+}
+
+.allow {
+  background: #00ff99;
+  color: #000;
+}
+
+.deny {
+  background: #ff5252;
+  color: #fff;
+}
+
+.stats {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.risk-meter {
+  margin-top: 10px;
+  background: #111;
+  border-radius: 6px;
+  height: 8px;
+  overflow: hidden;
+}
+
+#risk-bar {
+  height: 100%;
+  width: 0%;
+  background: red;
+  transition: width 0.3s ease;
+}
+
+#feedback {
+  margin-top: 14px;
+  font-size: 0.85rem;
+  min-height: 40px;
+}

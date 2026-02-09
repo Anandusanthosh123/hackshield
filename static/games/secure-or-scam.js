@@ -12,11 +12,15 @@
   const btnSafe = document.getElementById("btn-safe");
   const btnScam = document.getElementById("btn-scam");
 
-  // Example dataset (you can replace with your own)
   const data = [
     { domain: "apple.com", safe: true, clues: "Official Apple domain.\nSSL valid.\nNo urgency." },
     { domain: "paypal-secure-login.net", safe: false, clues: "Odd domain.\nUrgent wording.\nAsks for credentials." },
-    { domain: "microsoft.com", safe: true, clues: "Trusted worldwide domain." }
+    { domain: "microsoft.com", safe: true, clues: "Trusted worldwide domain." },
+    { domain: "amaz0n-security-alert.com", safe: false, clues: "Misspelled brand name.\nUrgent language." },
+    { domain: "github.com", safe: true, clues: "Official GitHub domain.\nTrusted platform." },
+    { domain: "netflix-account-verify.net", safe: false, clues: "Account verification scam." },
+    { domain: "stackoverflow.com", safe: true, clues: "Legitimate developer community." },
+    { domain: "bankofamerica-login.com", safe: false, clues: "Fake bank login page." }
   ];
 
   let index = 0;
@@ -27,11 +31,11 @@
     domainEl.textContent = item.domain;
     cluesEl.textContent = item.clues;
 
-    explainEl.classList.add("hidden");
-    explainEl.classList.remove("show");
+    explainEl.textContent = "";
+    explainEl.className = "explain";
 
     card.classList.remove("animate-in");
-    void card.offsetWidth; 
+    void card.offsetWidth;
     card.classList.add("animate-in");
 
     roundEl.textContent = index + 1;
@@ -49,8 +53,8 @@
     explainEl.textContent = correct
       ? "✔ Correct — you spotted it!"
       : "✘ Incorrect — review the domain carefully.";
-    explainEl.classList.remove("hidden");
-    explainEl.classList.add("show");
+
+    explainEl.classList.add(correct ? "correct" : "wrong");
 
     setTimeout(() => {
       index++;
@@ -59,22 +63,24 @@
       } else {
         loadRound();
       }
-    }, 1200);
+    }, 1100);
   }
 
   function finishGame() {
-    scoreInput.value = score * 10;
+    btnSafe.disabled = true;
+    btnScam.disabled = true;
 
-    fetch(window.location.pathname, {
-      method: "POST",
-      headers: { "X-CSRFToken": getCookie("csrftoken") },
-      body: new URLSearchParams({ score: scoreInput.value })
-    }).then(() => (window.location.href = "/games/"));
-  }
+    const xpEarned = score * 10;
+    scoreInput.value = xpEarned;
 
-  function getCookie(name) {
-    const match = document.cookie.split("; ").find(c => c.startsWith(name + "="));
-    return match ? decodeURIComponent(match.split("=")[1]) : "";
+    // ✅ Store banner message ONLY (no UI here)
+    sessionStorage.setItem(
+      "postGameBanner",
+      `Game complete! +${xpEarned} XP`
+    );
+
+    // ✅ Submit like other games
+    document.getElementById("score-form").submit();
   }
 
   btnSafe.addEventListener("click", () => handleChoice(true));

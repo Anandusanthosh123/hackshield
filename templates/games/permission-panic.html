@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Permission Panic</title>
+  <link rel="stylesheet" href="{% static 'games/permission-panic.css' %}">
+</head>
+<body>
+
+<div class="game-box">
+  <h1>🎭 Permission Panic</h1>
+
+  <div id="app-name" class="app-name"></div>
+  <div id="permission" class="permission"></div>
+
+  <div class="buttons">
+    <button class="allow" onclick="choose(true)">ALLOW</button>
+    <button class="deny" onclick="choose(false)">DENY</button>
+  </div>
+
+  <div class="stats">
+    <span>XP: <b id="xp">0</b></span>
+    <span>Risk: <b id="risk">0%</b></span>
+  </div>
+
+  <div class="risk-meter">
+    <div id="risk-bar"></div>
+  </div>
+
+  <p id="feedback"></p>
+</div>
+
+<!-- 🔐 AUTO SUBMIT FORM -->
+<form id="game-complete-form" method="POST" style="display:none;">
+  {% csrf_token %}
+  <input type="hidden" name="score" id="final-score">
+</form>
+
+<script src="{% static 'games/permission-panic.js' %}"></script>
+</body>
+</html>

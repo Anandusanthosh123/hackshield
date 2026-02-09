@@ -1359,13 +1359,14 @@ def lab_ai_guide(request):
 
     payload = {
     "model": "dolphin-phi",
-    "prompt": f"{LAB_AI_SYSTEM_PROMPT}\n\nUser Question:\n{user_message}",
+    "prompt": f"{LAB_AI_SYSTEM_PROMPT}\nUser: {user_message}",
     "stream": False,
-
     "options": {
-        "num_predict": 120,     # ⬅ HARD LIMIT (key fix)
-        "temperature": 0.3,     # ⬅ Less rambling
-        "top_p": 0.9
+        "temperature": 0.05,      # VERY IMPORTANT
+        "num_predict": 60,        # HARD STOP
+        "top_p": 0.8,
+        "repeat_penalty": 1.3,
+        "stop": ["\n\n", "Explanation:", "Sure", "Here"]
     }
 }
 
@@ -1395,10 +1396,16 @@ def lab_ai_guide(request):
         })
 
     except Exception as e:
-        return JsonResponse({
-            "reply": f"AI error: {str(e)}"
-        })
+     raw_reply = data.get("response", "").strip()
 
+# HARD ENFORCEMENT: max 3 lines, max 300 chars
+    lines = raw_reply.splitlines()
+    reply = "\n".join(lines[:3])[:300]
+
+    if not reply:
+     reply = "No valid response."
+
+    return JsonResponse({"reply": reply})
 
 @never_cache
 @login_required

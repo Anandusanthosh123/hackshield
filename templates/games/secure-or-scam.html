@@ -10,7 +10,10 @@
 
 <body>
 
-  {% include "components/floating_back_btn.html" %}
+  <!-- ✅ VIOLET BANNER NOTIFICATION (ADDED) -->
+  <div id="banner" class="banner hidden">
+    <span id="banner-text">Notification</span>
+  </div>
 
   <div class="wrap">
 
@@ -22,12 +25,12 @@
     <main class="card">
 
       <div class="meta">
-        <div>Round <span id="round">0</span>/<span id="total">8</span></div>
+        <div>Round <span id="round">1</span>/<span id="total">8</span></div>
         <div>Score: <span id="score">0</span></div>
       </div>
 
-      <div id="site-card" class="site-card animate-in">
-        <div id="domain" class="domain">example.com</div>
+      <div id="site-card" class="site-card fade">
+        <div id="domain" class="domain"></div>
         <div id="clues" class="clues"></div>
       </div>
 
@@ -36,8 +39,9 @@
         <button id="btn-scam" class="btn scam">⚠️ Scam</button>
       </div>
 
-      <div id="explain" class="explain hidden"></div>
+      <div id="explain" class="explain"></div>
 
+      <!-- Hidden submit form (same as other games) -->
       <form id="score-form" method="post" style="display:none">
         {% csrf_token %}
         <input type="hidden" name="score" id="score-input" value="0">
