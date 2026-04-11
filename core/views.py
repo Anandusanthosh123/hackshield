@@ -1339,7 +1339,6 @@ def complete_lab(request, slug):
 
     return redirect("profile", username=request.user.username)
 
-
 OLLAMA_URL = "http://127.0.0.1:11434/api/generate"
 
 @csrf_exempt
@@ -1348,6 +1347,9 @@ def lab_ai_guide(request):
     if request.method != "POST":
         return JsonResponse({"reply": "Invalid request method."}, status=400)
 
+    # -----------------------------
+    # GET USER MESSAGE
+    # -----------------------------
     try:
         body = json.loads(request.body.decode("utf-8"))
         user_message = body.get("message", "").strip()
@@ -1355,57 +1357,74 @@ def lab_ai_guide(request):
         return JsonResponse({"reply": "Invalid JSON request."}, status=400)
 
     if not user_message:
-        return JsonResponse({"reply": "Ask a question related to the lab."})
+        return JsonResponse({"reply": "Ask something 👇"})
 
+    # -----------------------------
+    # OLLAMA PAYLOAD (OPTIMIZED)
+    # -----------------------------
     payload = {
-    "model": "dolphin-phi",
-    "prompt": f"{LAB_AI_SYSTEM_PROMPT}\nUser: {user_message}",
-    "stream": False,
-    "options": {
-        "temperature": 0.05,      # VERY IMPORTANT
-        "num_predict": 60,        # HARD STOP
-        "top_p": 0.8,
-        "repeat_penalty": 1.3,
-        "stop": ["\n\n", "Explanation:", "Sure", "Here"]
+        "model": "dolphin-phi",
+        "prompt": f"{LAB_AI_SYSTEM_PROMPT}\nUser: {user_message}\nAssistant (max 3 lines):",
+        "stream": False,
+        "options": {
+            "temperature": 0.3,
+            "num_predict": 80,        # ⚡ faster
+            "top_p": 0.9,
+            "repeat_penalty": 1.05,
+            "num_ctx": 512,           # ⚡ faster context
+            "stop": ["\n\n"]          # ⚡ early stop
+        }
     }
-}
 
-
+    # -----------------------------
+    # CALL OLLAMA
+    # -----------------------------
     try:
         response = requests.post(
             OLLAMA_URL,
             json=payload,
-            timeout=90
+            timeout=40   # ⚡ faster timeout
         )
 
         if response.status_code != 200:
-            return JsonResponse({
-                "reply": "AI engine returned an error."
-            })
+            return JsonResponse({"reply": "AI engine error."})
 
         data = response.json()
+        raw_reply = data.get("response", "").strip()
 
-        return JsonResponse({
-            "reply": data.get("response", "").strip() or
-                     "AI could not generate a response."
-        })
+        # -----------------------------
+        # CLEAN RESPONSE (buddy style)
+        # -----------------------------
+        if not raw_reply:
+            return JsonResponse({"reply": "Buddy, nothing came 😅 try again"})
 
+        # remove unwanted AI phrases
+        bad_starts = ["I understand", "As an AI", "Sure", "Here"]
+        for b in bad_starts:
+            if raw_reply.startswith(b):
+                raw_reply = raw_reply.replace(b, "").strip()
+
+        # keep only first 3 lines
+        lines = raw_reply.split("\n")
+        reply = "\n".join(lines[:3]).strip()
+
+        if not reply:
+            reply = "Buddy, try again 👀"
+
+        return JsonResponse({"reply": reply})
+
+    # -----------------------------
+    # ERROR HANDLING
+    # -----------------------------
     except requests.exceptions.ConnectionError:
         return JsonResponse({
-            "reply": "Ollama is not running. Start it first."
+            "reply": "Ollama not running ⚠️"
         })
 
     except Exception as e:
-     raw_reply = data.get("response", "").strip()
-
-# HARD ENFORCEMENT: max 3 lines, max 300 chars
-    lines = raw_reply.splitlines()
-    reply = "\n".join(lines[:3])[:300]
-
-    if not reply:
-     reply = "No valid response."
-
-    return JsonResponse({"reply": reply})
+        return JsonResponse({
+            "reply": f"AI error: {str(e)}"
+        })
 
 @never_cache
 @login_required

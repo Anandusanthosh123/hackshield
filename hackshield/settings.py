@@ -18,7 +18,7 @@ SECRET_KEY = '7hjn#=vp@40cg2inuz^f)!c!5$a&ejka=l-z$zas*6zi6$b$hl'
 DEBUG = True
 
 # **MUST BE A LIST**
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1','192.168.43.144']
 
 # -------------------------------------------------
 # Application definition
@@ -209,4 +209,18 @@ JAZZMIN_SETTINGS = {
     # Theme
     "theme": "darkly",   # 🔥 Dark mode by default
 }
+# ----------------------------------
+# EMAIL CONFIG (GMAIL SMTP)
+# ----------------------------------
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'anandusanthosh1official@gmail.com'
+EMAIL_HOST_PASSWORD = 'dwgz dklr qzbe iaze'
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+PASSWORD_RESET_TIMEOUT = 3600

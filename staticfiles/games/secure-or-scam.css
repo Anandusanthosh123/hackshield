@@ -1,43 +1,120 @@
+:root {
+  --bg: #03080c;
+  --card: #06131a;
+  --border: rgba(0,255,180,0.15);
+  --text: #9fffe0;
+  --title: #32ffd2;
+  --safe: #0dbb7d;
+  --scam: #d93a3a;
+}
+
 body {
-  background: #020b0c;
-  color: #9fffe0;
-  font-family: Arial, sans-serif;
+  margin: 0;
+  background: radial-gradient(circle at top, #062016 0%, #03080c 70%);
+  font-family: Inter, Arial, sans-serif;
+  color: var(--text);
 }
 
 .wrap {
-  max-width: 700px;
+  max-width: 900px;
   margin: 40px auto;
+  padding: 10px;
 }
 
-.meta {
-  margin-bottom: 15px;
+.head h1 {
+  color: var(--title);
+  text-shadow: 0 0 12px var(--title);
 }
 
 .card {
-  background: #06131a;
-  padding: 20px;
-  border-radius: 10px;
-  margin-bottom: 15px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 22px;
+  margin-top: 25px;
+  box-shadow: 0 0 25px rgba(0,255,180,0.06);
 }
 
-#domain {
+.meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.site-card {
+  background: #041016;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+}
+
+.domain {
   font-size: 1.2rem;
-  font-weight: bold;
-  color: #32ffd2;
+  font-weight: 700;
+  color: var(--title);
+}
+
+.clues {
+  margin-top: 6px;
+  line-height: 1.6;
 }
 
 .actions {
   display: flex;
-  gap: 10px;
+  gap: 14px;
 }
 
-button {
+.btn {
   flex: 1;
-  padding: 12px;
-  font-size: 1rem;
+  padding: 14px;
+  font-size: 1.05rem;
+  font-weight: bold;
+  border-radius: 12px;
   cursor: pointer;
+  border: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-#message {
-  margin-top: 15px;
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn.safe {
+  background: var(--safe);
+}
+
+.btn.scam {
+  background: var(--scam);
+}
+
+.explain {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  display: none;
+  animation: fadeUp 0.4s ease;
+}
+
+.fade {
+  animation: fadeUp 0.5s ease;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.foot {
+  margin-top: 30px;
+  text-align: center;
+  opacity: 0.8;
 }

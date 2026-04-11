@@ -454,7 +454,7 @@ function refreshNews() {
             return res.json();
         })
         .then(updateNewsDOM)
-        .catch(() => alert("Offline — showing cached news."));
+       .catch(() => {});
 }
 
 // JOBS REFRESH
@@ -465,7 +465,7 @@ function refreshJobs() {
             return res.json();
         })
         .then(updateJobsDOM)
-        .catch(() => alert("Offline — showing cached jobs."));
+        .catch(() => {});
 }
 
 // DOM UPDATE
