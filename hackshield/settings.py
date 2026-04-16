@@ -12,13 +12,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # -------------------------------------------------
 # SECURITY
 # -------------------------------------------------
-SECRET_KEY = '7hjn#=vp@40cg2inuz^f)!c!5$a&ejka=l-z$zas*6zi6$b$hl'
+SECRET_KEY = 'YOUR KEY '
 
 # Development only – turn off in production
 DEBUG = True
 
 # **MUST BE A LIST**
-ALLOWED_HOSTS = ['localhost', '127.0.0.1','192.168.43.144']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1',]
 
 # -------------------------------------------------
 # Application definition
